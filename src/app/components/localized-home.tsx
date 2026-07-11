@@ -7,7 +7,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, BotMessageSquare, CalendarDays, Check, Cog, Mail, ScanSearch } from "lucide-react";
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-import { dictionaries, localeLabels, localePath, locales, type Locale } from "@/i18n/content";
+import { dictionaries, localeHtmlLang, localeLabels, localePath, locales, type Locale } from "@/i18n/content";
 import { LegalFooter } from "./legal-footer";
 
 type LeadPayload = {
@@ -67,7 +67,7 @@ export function LocalizedHome({ locale }: { locale: Locale }) {
   };
 
   useEffect(() => {
-    document.documentElement.lang = locale;
+    document.documentElement.lang = localeHtmlLang[locale];
   }, [locale]);
 
   return (

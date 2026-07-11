@@ -8,6 +8,12 @@ export const localeLabels: Record<Locale, string> = {
   el: "EL",
 };
 
+export const localeHtmlLang: Record<Locale, string> = {
+  en: "en",
+  de: "de-DE",
+  el: "el",
+};
+
 export function localePath(locale: Locale, path = "") {
   const cleanPath = path.startsWith("/") ? path : `/${path}`;
   if (locale === "en") return cleanPath === "/" ? "/" : cleanPath;
@@ -129,8 +135,8 @@ export const dictionaries = {
     },
     hero: {
       words: ["KI", "Agenten", "gebaut", "für"],
-      highlight: "dein Business",
-      subtitle: ["Automatisiere", "wiederkehrende", "Business", "Tasks", "und", "skaliere."],
+      highlight: "dein Unternehmen",
+      subtitle: ["Automatisiere", "wiederkehrende", "Unternehmensaufgaben", "und", "skaliere."],
       imageAlt: "Industrielle Fabrikmaschine mit Zahnradgetriebe und Rohrsystem",
       labels: ["Agentic Design", "Systemdenken", "Automation Perfektion"],
     },
