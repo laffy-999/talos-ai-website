@@ -8,7 +8,7 @@ Responsive clean-brutalist landing page for Talos AI, an AI automation agency.
 - Tailwind CSS
 - Framer Motion
 - `@studio-freight/react-lenis`
-- Convex
+- Cal.eu embed
 - lucide-react
 
 ## Local Development
@@ -20,27 +20,19 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-## Convex Setup
-
-Lead capture is guarded until Convex is configured.
+## Cal.eu Setup
 
 ```bash
-npx convex dev
+NEXT_PUBLIC_BOOKING_URL=https://cal.eu/your-username/your-event-type
 ```
 
-After Convex creates the deployment, set:
+For Cal.eu, you can also set the shorter account/event path:
 
 ```bash
-NEXT_PUBLIC_CONVEX_URL=your_convex_url
+NEXT_PUBLIC_CAL_LINK=your-username/your-event-type
 ```
 
-Optional booking link:
-
-```bash
-NEXT_PUBLIC_BOOKING_URL=https://your-booking-link.example
-```
-
-If `NEXT_PUBLIC_BOOKING_URL` is set, the primary CTA opens it. Otherwise, the CTA scrolls to the on-page booking request form.
+If either `NEXT_PUBLIC_BOOKING_URL` or `NEXT_PUBLIC_CAL_LINK` is set, the booking section embeds that Cal.eu booking page inline. The header and hero CTAs scroll to the booking section, and the default calendar is connected to `laffy/strategic-session`.
 
 ## Checks
 

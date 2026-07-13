@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { dictionaries, localeLabels, localePath, locales, type Locale } from "@/i18n/content";
 
-export function LegalFooter({ locale = "en" }: { locale?: Locale }) {
+export function LegalFooter({ locale = "de" }: { locale?: Locale }) {
   const labels = dictionaries[locale].footer.links;
   const legalLinks = [
     { href: localePath(locale, "/impressum"), label: labels[0] },

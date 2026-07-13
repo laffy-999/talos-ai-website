@@ -1,51 +1,39 @@
 "use client";
 
-import { CSSProperties, Dispatch, FormEvent, SetStateAction, useEffect, useMemo, useState } from "react";
+import { CSSProperties, useEffect, useMemo } from "react";
+import Cal, { getCalApi } from "@calcom/embed-react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, BotMessageSquare, CalendarDays, Check, Cog, Mail, ScanSearch } from "lucide-react";
-import { useMutation } from "convex/react";
-import { api } from "../../../convex/_generated/api";
+import { ArrowRight, BotMessageSquare, CalendarDays, Check, Cog, ScanSearch } from "lucide-react";
 import { dictionaries, localeHtmlLang, localeLabels, localePath, locales, type Locale } from "@/i18n/content";
 import { LegalFooter } from "./legal-footer";
 
-type LeadPayload = {
-  name: string;
-  email: string;
-  company: string;
-  website: string;
-  projectType: string;
-  goal: string;
-  timeline: string;
-  preferredContact: string;
-  message: string;
-  consent: boolean;
-  source: string;
-};
-
 const accent = "#39FF14";
-const hasConvex = Boolean(process.env.NEXT_PUBLIC_CONVEX_URL);
-const bookingUrl = process.env.NEXT_PUBLIC_BOOKING_URL;
+const calNamespace = "strategic-session";
+const calEmbedJsUrl = "https://cal.eu/embed/embed.js";
+const calLink = createCalLink(process.env.NEXT_PUBLIC_CAL_LINK, process.env.NEXT_PUBLIC_BOOKING_URL) || "laffy/strategic-session";
+const bookingUrl = createBookingUrl(process.env.NEXT_PUBLIC_BOOKING_URL, calLink);
 const spring = { type: "spring", stiffness: 90, damping: 20 } as const;
 const solutionIcons = [ScanSearch, BotMessageSquare, Cog] as const;
 
-function createInitialForm(locale: Locale): LeadPayload {
-  const options = dictionaries[locale].form.options;
+function createCalLink(calLink?: string, bookingUrl?: string) {
+  const rawUrl = (calLink || bookingUrl || "").trim();
+  if (!rawUrl) return undefined;
 
-  return {
-    name: "",
-    email: "",
-    company: "",
-    website: "",
-    projectType: options.projectTypes[0],
-    goal: "",
-    timeline: options.timelines[0],
-    preferredContact: options.contacts[0],
-    message: "",
-    consent: false,
-    source: `talos-ai-landing-${locale}`,
-  };
+  try {
+    return new URL(rawUrl).pathname.replace(/^\/+/, "");
+  } catch {
+    return rawUrl.replace(/^@/, "").replace(/^\/+/, "");
+  }
+}
+
+function createBookingUrl(bookingUrl?: string, link?: string) {
+  const rawUrl = (bookingUrl || link || "").trim();
+  if (!rawUrl) return undefined;
+  if (/^https?:\/\//i.test(rawUrl)) return rawUrl;
+
+  return `https://cal.eu/${rawUrl.replace(/^@/, "").replace(/^\/+/, "")}`;
 }
 
 export function LocalizedHome({ locale }: { locale: Locale }) {
@@ -53,22 +41,36 @@ export function LocalizedHome({ locale }: { locale: Locale }) {
   const reduceMotion = useReducedMotion();
   const sectionMotion = useMemo(
     () => ({
-      hiddenRight: reduceMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: 260 },
-      hiddenLeft: reduceMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: -260 },
+      hiddenRight: reduceMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: 42 },
+      hiddenLeft: reduceMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: -42 },
       visible: { opacity: 1, x: 0 },
     }),
     [reduceMotion],
   );
   const itemMotion = {
-    hiddenRight: reduceMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: 90 },
-    hiddenLeft: reduceMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: -90 },
-    hiddenUp: reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 },
+    hiddenRight: reduceMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: 28 },
+    hiddenLeft: reduceMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: -28 },
+    hiddenUp: reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 },
     visible: { opacity: 1, x: 0, y: 0 },
   };
 
   useEffect(() => {
     document.documentElement.lang = localeHtmlLang[locale];
   }, [locale]);
+
+  useEffect(() => {
+    (async function configureCalEmbed() {
+      const cal = await getCalApi({ namespace: calNamespace, embedJsUrl: calEmbedJsUrl });
+      cal("ui", {
+        cssVarsPerTheme: {
+          light: { "cal-brand": accent },
+          dark: { "cal-brand": accent },
+        },
+        hideEventTypeDetails: false,
+        layout: "month_view",
+      });
+    })();
+  }, []);
 
   return (
     <main className="relative w-full overflow-x-hidden bg-[var(--background)] text-[var(--primary)]">
@@ -81,17 +83,17 @@ export function LocalizedHome({ locale }: { locale: Locale }) {
           transition={{ duration: 0.7, delay: 0.42, ease: [0.16, 1, 0.3, 1] }}
         >
           <div className="mt-12 lg:mt-20">
-            <h1 className="max-w-5xl text-[clamp(3.5rem,12vw,10rem)] font-black uppercase leading-[0.82] tracking-normal">
+            <h1 className="max-w-5xl break-words text-[clamp(2.25rem,10.8vw,5.5rem)] font-black uppercase leading-[0.86] tracking-normal md:text-[clamp(4rem,9vw,7rem)] xl:text-[clamp(4.6rem,6.4vw,8rem)]">
               <AnimatedWords
                 reduceMotion={reduceMotion}
                 delay={0.52}
                 words={[
                   ...t.hero.words,
-                  {
-                    text: t.hero.highlight,
+                  ...t.hero.highlight.split(" ").map((text) => ({
+                    text,
                     className: "px-2 text-[var(--primary)]",
                     style: { backgroundColor: accent },
-                  },
+                  })),
                 ]}
               />
             </h1>
@@ -101,7 +103,7 @@ export function LocalizedHome({ locale }: { locale: Locale }) {
           </div>
           <div className="mt-12 flex flex-col gap-3 sm:flex-row">
             <PrimaryCta locale={locale} />
-            <a className="brutalist-button bg-[var(--background)] text-[var(--primary)]" href="#solution">
+            <a className="brutalist-button justify-center bg-[var(--background)] text-[var(--primary)] sm:justify-start" href="#solution">
               {t.nav.inspect} <ArrowRight size={18} />
             </a>
           </div>
@@ -110,31 +112,31 @@ export function LocalizedHome({ locale }: { locale: Locale }) {
       </section>
 
       <section id="problem" className="border-b-2 border-[var(--primary)] bg-[var(--background)] px-5 py-20 sm:px-8 lg:px-12">
-        <div className="grid items-stretch gap-10 lg:grid-cols-[0.82fr_1.18fr]">
+        <div className="grid min-w-0 items-stretch gap-10 lg:grid-cols-[0.82fr_1.18fr]">
           <motion.div
-            className="relative aspect-square w-full overflow-hidden border-2 border-[var(--primary)] bg-[var(--background)] [box-shadow:8px_8px_0_0_var(--primary)]"
+            className="relative min-w-0 aspect-square w-full overflow-hidden border-2 border-[var(--primary)] bg-[var(--background)] [box-shadow:8px_8px_0_0_var(--primary)]"
             initial="hiddenLeft"
             whileInView="visible"
-            viewport={{ once: false, margin: "-20%" }}
+            viewport={{ once: true, margin: "-20%" }}
             variants={sectionMotion}
             transition={spring}
           >
             <Image src="/problem.png" alt="Industrial bottleneck machine" fill sizes="(min-width: 1024px) 38vw, 100vw" className="object-cover" />
           </motion.div>
           <motion.div
-            className="ml-auto grid w-full max-w-6xl border-2 border-[var(--primary)] bg-[var(--background)] lg:grid-cols-[0.78fr_1.22fr]"
+            className="ml-auto grid min-w-0 w-full max-w-6xl border-2 border-[var(--primary)] bg-[var(--background)] 2xl:grid-cols-[0.78fr_1.22fr]"
             initial="hiddenRight"
             whileInView="visible"
-            viewport={{ once: false, margin: "-20%" }}
+            viewport={{ once: true, margin: "-20%" }}
             variants={sectionMotion}
             transition={spring}
           >
-            <div className="flex min-h-96 flex-col justify-between border-b-2 border-[var(--primary)] p-6 sm:p-10 lg:border-b-0 lg:border-r-2">
+            <div className="flex min-h-96 flex-col justify-between border-b-2 border-[var(--primary)] p-6 sm:p-10 2xl:border-b-0 2xl:border-r-2">
               <div>
                 <p className="accent-outline font-mono text-sm uppercase">
                   {t.problem.kicker}
                 </p>
-                <h2 className="mt-5 text-[clamp(3.4rem,7vw,6.5rem)] font-black uppercase leading-[0.85]">
+                <h2 className="mt-5 text-[clamp(2.3rem,10.5vw,6.5rem)] font-black uppercase leading-[0.85] sm:text-[clamp(3.4rem,7vw,6.5rem)]">
                   {t.problem.titleBefore}{" "}
                   <span className="inline-block px-2 text-[var(--primary)]" style={{ backgroundColor: accent }}>
                     {t.problem.highlight}
@@ -148,7 +150,7 @@ export function LocalizedHome({ locale }: { locale: Locale }) {
             <div className="divide-y-2 divide-[var(--primary)]">
               {t.problem.points.map((point) => (
                 <article key={point} className="min-h-36 bg-[var(--background)]">
-                  <p className="flex min-h-36 items-center p-5 text-2xl font-black leading-tight sm:p-8 sm:text-4xl">{point}</p>
+                  <p className="flex min-h-36 items-center p-5 text-2xl font-black leading-tight sm:p-8 sm:text-3xl xl:text-4xl">{point}</p>
                 </article>
               ))}
             </div>
@@ -157,12 +159,12 @@ export function LocalizedHome({ locale }: { locale: Locale }) {
       </section>
 
       <section id="solution" className="border-b-2 border-[var(--primary)] px-5 py-20 sm:px-8 lg:px-12">
-        <div className="grid items-center gap-10 lg:grid-cols-[1.18fr_0.82fr]">
+        <div className="grid min-w-0 items-center gap-10 lg:grid-cols-[1.18fr_0.82fr]">
           <motion.div
-            className="max-w-6xl border-2 border-[var(--primary)] bg-[var(--background)]"
+            className="min-w-0 max-w-6xl border-2 border-[var(--primary)] bg-[var(--background)]"
             initial="hiddenLeft"
             whileInView="visible"
-            viewport={{ once: false, margin: "-20%" }}
+            viewport={{ once: true, margin: "-20%" }}
             variants={sectionMotion}
             transition={spring}
           >
@@ -171,7 +173,7 @@ export function LocalizedHome({ locale }: { locale: Locale }) {
               className="grid border-t-2 border-[var(--primary)] lg:grid-cols-3"
               initial="hiddenLeft"
               whileInView="visible"
-              viewport={{ once: false, margin: "-20%" }}
+              viewport={{ once: true, margin: "-20%" }}
               variants={{ visible: { transition: { staggerChildren: 0.12, delayChildren: 0.12 } } }}
             >
               {t.solution.blocks.map(([title, text], index) => {
@@ -197,10 +199,10 @@ export function LocalizedHome({ locale }: { locale: Locale }) {
             </motion.div>
           </motion.div>
           <motion.div
-            className="relative aspect-video w-full overflow-hidden border-2 border-[var(--primary)] bg-[var(--background)] [box-shadow:8px_8px_0_0_var(--primary)]"
+            className="relative min-w-0 aspect-video w-full overflow-hidden border-2 border-[var(--primary)] bg-[var(--background)] [box-shadow:8px_8px_0_0_var(--primary)]"
             initial="hiddenRight"
             whileInView="visible"
-            viewport={{ once: false, margin: "-20%" }}
+            viewport={{ once: true, margin: "-20%" }}
             variants={sectionMotion}
             transition={spring}
           >
@@ -210,18 +212,18 @@ export function LocalizedHome({ locale }: { locale: Locale }) {
       </section>
 
       <section id="proof" className="border-b-2 border-[var(--primary)] px-5 py-20 sm:px-8 lg:px-12">
-        <div className="grid items-center gap-10 lg:grid-cols-[0.82fr_1.18fr]">
+        <div className="grid min-w-0 items-center gap-10 lg:grid-cols-[0.82fr_1.18fr]">
           <motion.div
-            className="relative aspect-video w-full overflow-hidden border-2 border-[var(--primary)] bg-[var(--background)] [box-shadow:8px_8px_0_0_var(--primary)]"
+            className="relative min-w-0 aspect-video w-full overflow-hidden border-2 border-[var(--primary)] bg-[var(--background)] [box-shadow:8px_8px_0_0_var(--primary)]"
             initial="hiddenLeft"
             whileInView="visible"
-            viewport={{ once: false, margin: "-20%" }}
+            viewport={{ once: true, margin: "-20%" }}
             variants={sectionMotion}
             transition={spring}
           >
             <Image src="/process.png" alt="Automation process engine" fill sizes="(min-width: 1024px) 38vw, 100vw" className="object-cover" />
           </motion.div>
-          <motion.div initial="hiddenRight" whileInView="visible" viewport={{ once: false, margin: "-20%" }} variants={sectionMotion} transition={spring}>
+          <motion.div initial="hiddenRight" whileInView="visible" viewport={{ once: true, margin: "-20%" }} variants={sectionMotion} transition={spring}>
             <div className="ml-auto max-w-5xl">
               <SectionLabel kicker={t.proof.kicker} title={t.proof.title} />
             </div>
@@ -229,7 +231,7 @@ export function LocalizedHome({ locale }: { locale: Locale }) {
               className="ml-auto grid max-w-6xl border-2 border-[var(--primary)] md:grid-cols-2 lg:grid-cols-4"
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: false, margin: "-20%" }}
+              viewport={{ once: true, margin: "-20%" }}
               variants={{ visible: { transition: { staggerChildren: 0.14, delayChildren: 0.08 } } }}
             >
               {t.proof.cards.map(([step, title, text]) => (
@@ -253,20 +255,20 @@ export function LocalizedHome({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      <section id="booking-request" className="bg-black px-5 py-20 sm:px-8 lg:px-12">
+      <section id="booking-request" className="bg-black px-5 py-14 sm:px-8 lg:px-12">
         <motion.div
-          className="grid border-2 border-[var(--primary)] bg-[var(--primary)] text-[var(--background)] lg:grid-cols-[0.9fr_1.1fr]"
+          className="mx-auto grid max-w-[1400px] gap-6 text-[var(--background)] 2xl:grid-cols-[460px_minmax(0,1fr)]"
           initial="hiddenUp"
           whileInView="visible"
-          viewport={{ once: false, margin: "-20%" }}
+          viewport={{ once: true, margin: "-20%" }}
           variants={itemMotion}
           transition={spring}
         >
-          <div className="border-b-2 border-[var(--background)] p-6 sm:p-10 lg:border-b-0 lg:border-r-2">
+          <div className="flex flex-col justify-between border-2 border-[var(--primary)] bg-[var(--primary)] p-6 text-[var(--background)] sm:p-8 2xl:min-h-[640px]">
             <p className="accent-outline font-mono text-sm uppercase">
               {t.cta.kicker}
             </p>
-            <h2 className="mt-5 text-[clamp(3rem,8vw,7rem)] font-black uppercase leading-[0.88]">{t.cta.title}</h2>
+            <h2 className="mt-5 max-w-full break-words text-[clamp(2rem,8vw,3.8rem)] font-black uppercase leading-[0.9] sm:text-[clamp(2.4rem,7vw,4.75rem)] 2xl:text-[2.7rem]">{t.cta.title}</h2>
             <p className="mt-8 max-w-xl text-xl font-semibold leading-snug">{t.cta.body}</p>
             <div className="mt-10 grid gap-3 font-mono text-sm uppercase">
               {t.cta.bullets.map((bullet) => (
@@ -276,7 +278,7 @@ export function LocalizedHome({ locale }: { locale: Locale }) {
               ))}
             </div>
           </div>
-          {hasConvex ? <LeadForm locale={locale} /> : <UnconfiguredLeadForm locale={locale} />}
+          <BookingPanel locale={locale} />
         </motion.div>
       </section>
       <LegalFooter locale={locale} />
@@ -305,7 +307,7 @@ function Header({ locale }: { locale: Locale }) {
             </Link>
           ))}
         </nav>
-        <a href={bookingUrl || "#booking-request"} target={bookingUrl ? "_blank" : undefined} className="font-black" rel="noreferrer">
+        <a className="font-black" href="#booking-request">
           {t.nav.book}
         </a>
       </div>
@@ -317,8 +319,22 @@ function PrimaryCta({ locale }: { locale: Locale }) {
   const t = dictionaries[locale];
 
   return (
-    <a className="brutalist-button text-[var(--primary)]" href={bookingUrl || "#booking-request"} target={bookingUrl ? "_blank" : undefined} rel="noreferrer" style={{ backgroundColor: accent }}>
+    <a className="brutalist-button justify-center text-[var(--primary)] sm:justify-start" href="#booking-request" style={{ backgroundColor: accent }}>
       <CalendarDays size={19} /> {t.nav.bookAudit}
+    </a>
+  );
+}
+
+function BookingLink({ className, style, children }: { className?: string; style?: CSSProperties; children: React.ReactNode }) {
+  return (
+    <a
+      className={className}
+      href={bookingUrl || "#booking-request"}
+      rel="noreferrer"
+      style={style}
+      target={bookingUrl ? "_blank" : undefined}
+    >
+      {children}
     </a>
   );
 }
@@ -385,13 +401,13 @@ function HeroMachine({ locale, reduceMotion }: { locale: Locale; reduceMotion: b
 
   return (
     <motion.div
-      className="grid min-h-[620px] grid-rows-[1fr_auto] bg-[var(--background)]"
+      className="grid min-h-[auto] grid-rows-[1fr_auto] bg-[var(--background)] lg:min-h-[620px]"
       initial={reduceMotion ? false : { opacity: 0, x: 180 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ type: "spring", stiffness: 85, damping: 18, delay: 0.04 }}
     >
       <div className="relative overflow-hidden border-b-2 border-[var(--primary)] bg-[var(--background)] p-5 sm:p-8">
-        <div className="relative h-full min-h-[560px] border-2 border-[var(--primary)] bg-[var(--background)] [box-shadow:8px_8px_0_0_var(--primary)]">
+        <div className="relative h-full min-h-[360px] border-2 border-[var(--primary)] bg-[var(--background)] [box-shadow:8px_8px_0_0_var(--primary)] sm:min-h-[500px] lg:min-h-[560px]">
           <Image src="/hero-factory-v2.png" alt={t.hero.imageAlt} fill priority sizes="(min-width: 1024px) 42vw, 100vw" className="object-cover" />
         </div>
       </div>
@@ -419,178 +435,39 @@ function SectionLabel({ kicker, title, inverted = false }: { kicker: string; tit
   );
 }
 
-function LeadForm({ locale }: { locale: Locale }) {
-  const submitLead = useMutation(api.leads.submitLead);
-  const [form, setForm] = useState(() => createInitialForm(locale));
-  const [errors, setErrors] = useState<Partial<Record<keyof LeadPayload, string>>>({});
-  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
-
-  async function onSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const nextErrors = validateLead(form, locale);
-    setErrors(nextErrors);
-    if (Object.keys(nextErrors).length > 0) return;
-
-    setStatus("submitting");
-    try {
-      await submitLead(form);
-      setForm(createInitialForm(locale));
-      setStatus("success");
-    } catch {
-      setStatus("error");
-    }
-  }
-
-  if (status === "success") {
-    return <BookingSuccessPanel locale={locale} />;
-  }
-
-  return <LeadFormShell locale={locale} form={form} setForm={setForm} errors={errors} status={status} onSubmit={onSubmit} />;
-}
-
-function UnconfiguredLeadForm({ locale }: { locale: Locale }) {
-  const [form, setForm] = useState(() => createInitialForm(locale));
-  return <LeadFormShell locale={locale} form={form} setForm={setForm} errors={{}} status="idle" disabled onSubmit={(event) => event.preventDefault()} />;
-}
-
-function LeadFormShell({
-  locale,
-  form,
-  setForm,
-  errors,
-  status,
-  onSubmit,
-  disabled = false,
-}: {
-  locale: Locale;
-  form: LeadPayload;
-  setForm: Dispatch<SetStateAction<LeadPayload>>;
-  errors: Partial<Record<keyof LeadPayload, string>>;
-  status: "idle" | "submitting" | "success" | "error";
-  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
-  disabled?: boolean;
-}) {
-  const t = dictionaries[locale];
-  const update = (field: keyof LeadPayload, value: string | boolean) => setForm({ ...form, [field]: value });
-
-  return (
-    <form onSubmit={onSubmit} className="grid gap-4 p-6 sm:p-10">
-      {disabled && (
-        <div className="accent-outline border-2 border-[var(--background)] p-4 font-mono text-sm uppercase">
-          {t.cta.unconfigured}
-        </div>
-      )}
-      <div className="grid gap-4 md:grid-cols-2">
-        <Field label={t.form.name} error={errors.name}>
-          <input value={form.name} onChange={(event) => update("name", event.target.value)} disabled={disabled} />
-        </Field>
-        <Field label={t.form.email} error={errors.email}>
-          <input value={form.email} onChange={(event) => update("email", event.target.value)} disabled={disabled} />
-        </Field>
-        <Field label={t.form.company} error={errors.company}>
-          <input value={form.company} onChange={(event) => update("company", event.target.value)} disabled={disabled} />
-        </Field>
-        <Field label={t.form.website}>
-          <input value={form.website} onChange={(event) => update("website", event.target.value)} disabled={disabled} placeholder="https://" />
-        </Field>
-        <Field label={t.form.projectType}>
-          <select value={form.projectType} onChange={(event) => update("projectType", event.target.value)} disabled={disabled}>
-            {t.form.options.projectTypes.map((option) => (
-              <option key={option}>{option}</option>
-            ))}
-          </select>
-        </Field>
-        <Field label={t.form.timeline}>
-          <select value={form.timeline} onChange={(event) => update("timeline", event.target.value)} disabled={disabled}>
-            {t.form.options.timelines.map((option) => (
-              <option key={option}>{option}</option>
-            ))}
-          </select>
-        </Field>
-      </div>
-      <Field label={t.form.goal} error={errors.goal}>
-        <input value={form.goal} onChange={(event) => update("goal", event.target.value)} disabled={disabled} />
-      </Field>
-      <Field label={t.form.message}>
-        <textarea value={form.message} onChange={(event) => update("message", event.target.value)} disabled={disabled} rows={4} />
-      </Field>
-      <Field label={t.form.preferredContact}>
-        <select value={form.preferredContact} onChange={(event) => update("preferredContact", event.target.value)} disabled={disabled}>
-          {t.form.options.contacts.map((option) => (
-            <option key={option}>{option}</option>
-          ))}
-        </select>
-      </Field>
-      <label className="flex gap-3 border-2 border-[var(--background)] p-4 font-mono text-sm uppercase">
-        <input className="mt-1 h-5 w-5 accent-[#39FF14]" type="checkbox" checked={form.consent} onChange={(event) => update("consent", event.target.checked)} disabled={disabled} />
-        <span>
-          {t.form.consentBefore}{" "}
-          <Link className="underline decoration-2 underline-offset-4" href={localePath(locale, "/privacy")}>
-            {t.form.privacy}
-          </Link>
-          .
-        </span>
-      </label>
-      {errors.consent && (
-        <p className="accent-outline font-mono text-sm uppercase">
-          {errors.consent}
-        </p>
-      )}
-      <button className="brutalist-button justify-center text-[var(--primary)] disabled:cursor-not-allowed disabled:opacity-60" type="submit" disabled={disabled || status === "submitting"} style={{ backgroundColor: accent }}>
-        {status === "submitting" ? t.cta.sending : t.cta.requestBooking} <Mail size={18} />
-      </button>
-      {status === "error" && (
-        <p className="accent-outline font-mono text-sm uppercase">
-          {t.cta.failed}
-        </p>
-      )}
-    </form>
-  );
-}
-
-function BookingSuccessPanel({ locale }: { locale: Locale }) {
+function BookingPanel({ locale }: { locale: Locale }) {
   const t = dictionaries[locale];
 
   return (
-    <div className="grid content-center gap-6 p-6 sm:p-10">
-      <div className="border-2 border-[var(--background)] p-5">
-        <p className="accent-outline font-mono text-sm uppercase">
-          {t.cta.successKicker}
-        </p>
-        <h3 className="mt-4 text-4xl font-black uppercase leading-none sm:text-5xl">{t.cta.successTitle}</h3>
-        <p className="mt-5 text-lg font-semibold leading-snug">{t.cta.successBody}</p>
-      </div>
-      {bookingUrl ? (
-        <a className="brutalist-button justify-center text-[var(--primary)]" href={bookingUrl} rel="noreferrer" target="_blank" style={{ backgroundColor: accent }}>
-          {t.cta.openCalendar} <CalendarDays size={18} />
-        </a>
-      ) : (
-        <div className="accent-outline border-2 border-[var(--background)] p-4 font-mono text-sm uppercase">
-          {t.cta.bookingMissing}
+    <div className="grid min-w-0 gap-4">
+      <div className="flex flex-col gap-4 text-[var(--background)] lg:flex-row lg:items-start lg:justify-between">
+        <div className="max-w-xl">
+          <p className="accent-outline font-mono text-sm uppercase">
+            {t.cta.bookingKicker}
+          </p>
+          <h3 className="mt-2 text-3xl font-black uppercase leading-none sm:text-4xl">{t.cta.bookingTitle}</h3>
+          <p className="mt-3 text-base font-semibold leading-snug text-white/80 sm:text-lg">{t.cta.bookingBody}</p>
         </div>
-      )}
+        {bookingUrl ? (
+          <BookingLink className="brutalist-button shrink-0 justify-center border-[var(--accent)] text-[var(--primary)] [box-shadow:4px_4px_0_0_var(--accent)]" style={{ backgroundColor: accent }}>
+            {t.cta.openCalendar} <CalendarDays size={18} />
+          </BookingLink>
+        ) : (
+          <div className="accent-outline border-2 border-[var(--accent)] p-4 font-mono text-sm uppercase">
+            {t.cta.bookingMissing}
+          </div>
+        )}
+      </div>
+      <div className="h-[900px] min-h-[760px] overflow-hidden bg-[#111] md:h-[900px] lg:h-[700px] xl:h-[640px]">
+        <Cal
+          calLink={calLink}
+          calOrigin="https://app.cal.eu"
+          config={{ layout: "month_view", theme: "dark", useSlotsViewOnSmallScreen: "true" }}
+          embedJsUrl={calEmbedJsUrl}
+          namespace={calNamespace}
+          style={{ width: "100%", height: "100%", overflow: "scroll" }}
+        />
+      </div>
     </div>
   );
-}
-
-function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
-  return (
-    <label className="grid gap-2 font-mono text-sm uppercase">
-      <span>{label}</span>
-      {children}
-      {error && <span className="accent-outline">{error}</span>}
-    </label>
-  );
-}
-
-function validateLead(form: LeadPayload, locale: Locale) {
-  const labels = dictionaries[locale].form.errors;
-  const errors: Partial<Record<keyof LeadPayload, string>> = {};
-  if (!form.name.trim()) errors.name = labels.name;
-  if (!form.email.trim()) errors.email = labels.email;
-  if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errors.email = labels.invalidEmail;
-  if (!form.company.trim()) errors.company = labels.company;
-  if (!form.goal.trim()) errors.goal = labels.goal;
-  if (!form.consent) errors.consent = labels.consent;
-  return errors;
 }

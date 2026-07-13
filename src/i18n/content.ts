@@ -1,4 +1,4 @@
-export const locales = ["en", "de", "el"] as const;
+export const locales = ["de", "en", "el"] as const;
 
 export type Locale = (typeof locales)[number];
 
@@ -16,7 +16,7 @@ export const localeHtmlLang: Record<Locale, string> = {
 
 export function localePath(locale: Locale, path = "") {
   const cleanPath = path.startsWith("/") ? path : `/${path}`;
-  if (locale === "en") return cleanPath === "/" ? "/" : cleanPath;
+  if (locale === "de") return cleanPath === "/" ? "/" : cleanPath;
   return cleanPath === "/" ? `/${locale}` : `/${locale}${cleanPath}`;
 }
 
@@ -76,15 +76,11 @@ export const dictionaries = {
       kicker: "Conversion block",
       title: "Book a strategic session",
       body: "Lets discover together your opportunities for applied autonomous systems.",
-      bullets: ["No fake AI roadmap", "Concrete workflow target", "Convex-backed lead capture"],
-      requestBooking: "Request booking",
-      sending: "Sending",
-      unconfigured: "Add NEXT_PUBLIC_CONVEX_URL by running Convex setup before accepting submissions.",
-      failed: "Submission failed. Check Convex configuration and try again.",
-      successKicker: "Request received",
-      successTitle: "Now book your strategic session.",
-      successBody:
-        "Your request has been stored. Open the Cal.eu booking calendar to choose a time. No personal data is added to the booking URL.",
+      bullets: ["No fake AI roadmap", "Concrete workflow target", "Cal.eu-powered booking"],
+      bookingKicker: "Calendar ready",
+      bookingTitle: "Choose your time.",
+      bookingBody:
+        "Open the Cal.eu calendar to pick a strategic session slot. Booking details and qualification questions are handled directly by Cal.eu.",
       openCalendar: "Open booking calendar",
       bookingMissing: "Add NEXT_PUBLIC_BOOKING_URL to enable the Cal.eu booking button.",
     },
@@ -143,7 +139,7 @@ export const dictionaries = {
     problem: {
       kicker: "Problem",
       titleBefore: "Du bist der",
-      highlight: "Bottleneck",
+      highlight: "Flaschenhals",
       note: "Jede manuelle Übergabe bremst Wachstum.",
       points: [
         "Stunden gehen für Aufgaben verloren, die Minuten dauern sollten",
@@ -174,15 +170,11 @@ export const dictionaries = {
       kicker: "Conversion Block",
       title: "Strategische Session buchen",
       body: "Lass uns gemeinsam deine Chancen für angewandte autonome Systeme entdecken.",
-      bullets: ["Keine Fake-KI-Roadmap", "Konkretes Workflow-Ziel", "Convex-basierte Lead-Erfassung"],
-      requestBooking: "Buchung anfragen",
-      sending: "Senden",
-      unconfigured: "Füge NEXT_PUBLIC_CONVEX_URL hinzu, bevor Anfragen angenommen werden.",
-      failed: "Übermittlung fehlgeschlagen. Prüfe die Convex-Konfiguration und versuche es erneut.",
-      successKicker: "Anfrage erhalten",
-      successTitle: "Buche jetzt deine strategische Session.",
-      successBody:
-        "Deine Anfrage wurde gespeichert. Öffne den Cal.eu Kalender, um einen Termin auszuwählen. Es werden keine persönlichen Daten an die Booking-URL angehängt.",
+      bullets: ["Keine Fake-KI-Roadmap", "Konkretes Workflow-Ziel", "Buchung über Cal.eu"],
+      bookingKicker: "Kalender bereit",
+      bookingTitle: "Wähle deinen Termin.",
+      bookingBody:
+        "Öffne den Cal.eu Kalender, um einen Slot für die strategische Session auszuwählen. Buchungsdetails und Qualifizierungsfragen werden direkt von Cal.eu verarbeitet.",
       openCalendar: "Booking-Kalender öffnen",
       bookingMissing: "Füge NEXT_PUBLIC_BOOKING_URL hinzu, um den Cal.eu Booking-Button zu aktivieren.",
     },
@@ -272,15 +264,11 @@ export const dictionaries = {
       kicker: "Conversion block",
       title: "Κλεισε Strategic Session",
       body: "Ας ανακαλυψουμε μαζι τις ευκαιριες σου για εφαρμοσμενα autonomous systems.",
-      bullets: ["Οχι fake AI roadmap", "Συγκεκριμενος workflow στοχος", "Convex-backed lead capture"],
-      requestBooking: "Αιτημα κρατησης",
-      sending: "Αποστολη",
-      unconfigured: "Προσθεσε NEXT_PUBLIC_CONVEX_URL πριν δεχτεις submissions.",
-      failed: "Η υποβολη απετυχε. Ελεγξε το Convex configuration και δοκιμασε ξανα.",
-      successKicker: "Το αιτημα εληφθη",
-      successTitle: "Τωρα κλεισε τη strategic session.",
-      successBody:
-        "Το αιτημα σου αποθηκευτηκε. Ανοιξε το Cal.eu booking calendar για να διαλεξεις ωρα. Δεν προστιθενται προσωπικα δεδομενα στο booking URL.",
+      bullets: ["Οχι fake AI roadmap", "Συγκεκριμενος workflow στοχος", "Booking με Cal.eu"],
+      bookingKicker: "Calendar ready",
+      bookingTitle: "Διαλεξε την ωρα σου.",
+      bookingBody:
+        "Ανοιξε το Cal.eu calendar για να διαλεξεις slot για strategic session. Τα booking details και qualification questions τα χειριζεται απευθειας το Cal.eu.",
       openCalendar: "Ανοιγμα booking calendar",
       bookingMissing: "Προσθεσε NEXT_PUBLIC_BOOKING_URL για να ενεργοποιηθει το Cal.eu booking button.",
     },
