@@ -83,7 +83,7 @@ export function LocalizedHome({ locale }: { locale: Locale }) {
           transition={{ duration: 0.7, delay: 0.42, ease: [0.16, 1, 0.3, 1] }}
         >
           <div className="mt-12 lg:mt-20">
-            <h1 className="max-w-5xl break-words text-[clamp(2.25rem,10.8vw,5.5rem)] font-black uppercase leading-[0.86] tracking-normal md:text-[clamp(4rem,9vw,7rem)] xl:text-[clamp(4.6rem,6.4vw,8rem)]">
+            <h1 className="max-w-5xl break-words [overflow-wrap:anywhere] text-[clamp(2.25rem,10.8vw,5.5rem)] font-black uppercase leading-[0.86] tracking-normal md:text-[clamp(4rem,9vw,7rem)] xl:text-[clamp(4.6rem,6.4vw,8rem)]">
               <AnimatedWords
                 reduceMotion={reduceMotion}
                 delay={0.52}
@@ -91,7 +91,7 @@ export function LocalizedHome({ locale }: { locale: Locale }) {
                   ...t.hero.words,
                   ...t.hero.highlight.split(" ").map((text) => ({
                     text,
-                    className: "px-2 text-[var(--primary)]",
+                    className: "px-2 text-[var(--primary)] [box-decoration-break:clone] [-webkit-box-decoration-break:clone]",
                     style: { backgroundColor: accent },
                   })),
                 ]}
@@ -136,21 +136,27 @@ export function LocalizedHome({ locale }: { locale: Locale }) {
                 <p className="accent-outline font-mono text-sm uppercase">
                   {t.problem.kicker}
                 </p>
-                <h2 className="mt-5 text-[clamp(2.3rem,10.5vw,6.5rem)] font-black uppercase leading-[0.85] sm:text-[clamp(3.4rem,7vw,6.5rem)]">
+                <h2 className="mt-5 max-w-full break-words [overflow-wrap:anywhere] text-[clamp(2rem,10vw,6.5rem)] font-black uppercase leading-[0.9] sm:text-[clamp(3.4rem,7vw,6.5rem)] sm:leading-[0.85]">
                   {t.problem.titleBefore}{" "}
-                  <span className="inline-block px-2 text-[var(--primary)]" style={{ backgroundColor: accent }}>
+                  <span
+                    className="mt-1 inline-block px-2 text-[var(--primary)] [box-decoration-break:clone] [-webkit-box-decoration-break:clone] sm:mt-0 sm:inline"
+                    style={{ backgroundColor: accent }}
+                  >
                     {t.problem.highlight}
                   </span>
                 </h2>
               </div>
-              <p className="mt-12 border-2 border-[var(--primary)] p-4 font-mono text-sm uppercase [box-shadow:6px_6px_0_0_var(--primary)]" style={{ backgroundColor: accent }}>
+              <p
+                className="mt-12 max-w-full break-words border-2 border-[var(--primary)] p-4 font-mono text-xs uppercase leading-snug [box-shadow:6px_6px_0_0_var(--primary)] [overflow-wrap:anywhere] sm:text-sm"
+                style={{ backgroundColor: accent }}
+              >
                 {t.problem.note}
               </p>
             </div>
             <div className="divide-y-2 divide-[var(--primary)]">
               {t.problem.points.map((point) => (
                 <article key={point} className="min-h-36 bg-[var(--background)]">
-                  <p className="flex min-h-36 items-center p-5 text-2xl font-black leading-tight sm:p-8 sm:text-3xl xl:text-4xl">{point}</p>
+                  <p className="flex min-h-36 items-center break-words p-5 text-2xl font-black leading-tight [overflow-wrap:anywhere] sm:p-8 sm:text-3xl xl:text-4xl">{point}</p>
                 </article>
               ))}
             </div>
@@ -191,7 +197,7 @@ export function LocalizedHome({ locale }: { locale: Locale }) {
                     >
                       <Icon size={34} strokeWidth={2.75} />
                     </div>
-                    <h3 className="text-3xl font-black uppercase leading-none">{title}</h3>
+                    <h3 className="break-words text-3xl font-black uppercase leading-none [overflow-wrap:anywhere]">{title}</h3>
                     <p className="mt-5 text-lg font-semibold leading-snug">{text}</p>
                   </motion.article>
                 );
@@ -206,7 +212,13 @@ export function LocalizedHome({ locale }: { locale: Locale }) {
             variants={sectionMotion}
             transition={spring}
           >
-            <Image src="/solution.png" alt="Automation system connecting operational workflows" fill sizes="(min-width: 1024px) 38vw, 100vw" className="object-cover" />
+            <Image
+              src="/solution.png"
+              alt="Automation system connecting operational workflows"
+              fill
+              sizes="(min-width: 1024px) 38vw, 100vw"
+              className="object-contain object-center"
+            />
           </motion.div>
         </div>
       </section>
@@ -359,7 +371,7 @@ function AnimatedWords({
           const style = typeof word === "string" ? undefined : word.style;
 
           return (
-            <span key={`${text}-${index}`} className={`inline-block ${className}`} style={style}>
+            <span key={`${text}-${index}`} className={`inline-block max-w-full break-words [overflow-wrap:anywhere] ${className}`} style={style}>
               {text}
               {index < words.length - 1 ? "\u00a0" : ""}
             </span>
@@ -379,7 +391,7 @@ function AnimatedWords({
         return (
           <motion.span
             key={`${text}-${index}`}
-            className={`inline-block ${className}`}
+            className={`inline-block max-w-full break-words [overflow-wrap:anywhere] ${className}`}
             style={style}
             variants={{
               hidden: { opacity: 0, y: 28, scale: 0.92 },
@@ -428,7 +440,9 @@ function SectionLabel({ kicker, title, inverted = false }: { kicker: string; tit
       <p className="accent-outline font-mono text-sm uppercase">
         {kicker}
       </p>
-      <h2 className={`mt-5 max-w-5xl text-4xl font-black uppercase leading-none sm:text-6xl ${inverted ? "text-[var(--background)]" : "text-[var(--primary)]"}`}>
+      <h2
+        className={`mt-5 max-w-5xl break-words text-[clamp(2.15rem,10vw,3.75rem)] font-black uppercase leading-none [overflow-wrap:anywhere] sm:text-6xl ${inverted ? "text-[var(--background)]" : "text-[var(--primary)]"}`}
+      >
         {title}
       </h2>
     </div>

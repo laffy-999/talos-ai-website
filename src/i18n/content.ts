@@ -138,8 +138,8 @@ export const dictionaries = {
     },
     problem: {
       kicker: "Problem",
-      titleBefore: "Du bist der",
-      highlight: "Flaschenhals",
+      titleBefore: "Manuelle Arbeit",
+      highlight: "bremst Wachstum",
       note: "Jede manuelle Übergabe bremst Wachstum.",
       points: [
         "Stunden gehen für Aufgaben verloren, die Minuten dauern sollten",
