@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { Providers } from "./providers";
 
@@ -12,6 +13,8 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+const beaconToken = process.env.NEXT_PUBLIC_CF_BEACON_TOKEN?.trim();
 
 export const metadata: Metadata = {
   title: "Talos AI | Agentur für KI-Automation",
@@ -31,6 +34,13 @@ export default function RootLayout({
     >
       <body className="min-h-full">
         <Providers>{children}</Providers>
+        {beaconToken ? (
+          <Script
+            data-cf-beacon={JSON.stringify({ token: beaconToken })}
+            src="https://static.cloudflareinsights.com/beacon.min.js"
+            strategy="afterInteractive"
+          />
+        ) : null}
       </body>
     </html>
   );

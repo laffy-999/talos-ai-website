@@ -8,7 +8,7 @@ Responsive clean-brutalist landing page for Talos AI, an AI automation agency.
 - Tailwind CSS
 - Framer Motion
 - `@studio-freight/react-lenis`
-- Cal.eu embed
+- Google Calendar appointment scheduling embed
 - lucide-react
 
 ## Local Development
@@ -20,19 +20,22 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-## Cal.eu Setup
+## Google Calendar Booking Setup
+
+Create an appointment schedule in Google Calendar, open its booking page, and copy the link:
 
 ```bash
-NEXT_PUBLIC_BOOKING_URL=https://cal.eu/your-username/your-event-type
+NEXT_PUBLIC_BOOKING_URL=https://calendar.google.com/calendar/appointments/schedules/YOUR_SCHEDULE_ID
 ```
 
-For Cal.eu, you can also set the shorter account/event path:
+When `NEXT_PUBLIC_BOOKING_URL` is set, the booking section embeds that booking page inline (the embed adds `gv=true` automatically) and shows an "open calendar" link that opens the same page in a new tab.
+When it is unset or rejected, the section renders a configuration notice instead of a broken embed.
+The header and hero CTAs always scroll to the booking section.
 
-```bash
-NEXT_PUBLIC_CAL_LINK=your-username/your-event-type
-```
+The value must be an `https://calendar.google.com/...` link; any other scheme or host is rejected, because the embed depends on Google's `gv=true` booking view.
+A link copied straight from the address bar carries a `/u/<n>/` account segment, which is stripped automatically, so either form works.
 
-If either `NEXT_PUBLIC_BOOKING_URL` or `NEXT_PUBLIC_CAL_LINK` is set, the booking section embeds that Cal.eu booking page inline. The header and hero CTAs scroll to the booking section, and the default calendar is connected to `laffy/strategic-session`.
+`NEXT_PUBLIC_*` variables are inlined at build time, so this must be set in the deploy environment too, not only in `.env.local`.
 
 ## Checks
 

@@ -11,7 +11,6 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@calcom/embed-react": "^1.5.3",
     "@opennextjs/cloudflare": "^1.20.1",
     "@studio-freight/react-lenis": "^0.0.47",
     "framer-motion": "^12.42.2",

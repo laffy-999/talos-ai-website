@@ -1,7 +1,6 @@
 "use client";
 
-import { CSSProperties, useEffect, useMemo } from "react";
-import Cal, { getCalApi } from "@calcom/embed-react";
+import { CSSProperties, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
@@ -10,30 +9,40 @@ import { dictionaries, localeHtmlLang, localeLabels, localePath, locales, type L
 import { LegalFooter } from "./legal-footer";
 
 const accent = "#39FF14";
-const calNamespace = "strategic-session";
-const calEmbedJsUrl = "https://cal.eu/embed/embed.js";
-const calLink = createCalLink(process.env.NEXT_PUBLIC_CAL_LINK, process.env.NEXT_PUBLIC_BOOKING_URL) || "laffy/strategic-session";
-const bookingUrl = createBookingUrl(process.env.NEXT_PUBLIC_BOOKING_URL, calLink);
+const bookingHost = "calendar.google.com";
+const bookingUrl = normalizeBookingUrl(process.env.NEXT_PUBLIC_BOOKING_URL);
+const bookingEmbedUrl = createEmbedUrl(bookingUrl);
 const spring = { type: "spring", stiffness: 90, damping: 20 } as const;
 const solutionIcons = [ScanSearch, BotMessageSquare, Cog] as const;
 
-function createCalLink(calLink?: string, bookingUrl?: string) {
-  const rawUrl = (calLink || bookingUrl || "").trim();
-  if (!rawUrl) return undefined;
+// Only an https `calendar.google.com` appointment schedule is embeddable here, because the
+// embed depends on Google's `gv=true` booking view. Anything else falls back to the setup
+// notice instead of framing an unexpected origin.
+// Address-bar links also carry a `/u/<n>/` account segment that redirects to the canonical
+// path; strip it so the embed skips a round trip and never depends on the visitor's
+// signed-in Google account order.
+function normalizeBookingUrl(rawUrl?: string) {
+  const trimmed = (rawUrl || "").trim();
+  if (!trimmed) return undefined;
 
   try {
-    return new URL(rawUrl).pathname.replace(/^\/+/, "");
+    const url = new URL(trimmed);
+    if (url.protocol !== "https:" || url.hostname !== bookingHost) return undefined;
+
+    url.pathname = url.pathname.replace(/^\/calendar\/u\/\d+\//, "/calendar/");
+    return url.toString();
   } catch {
-    return rawUrl.replace(/^@/, "").replace(/^\/+/, "");
+    return undefined;
   }
 }
 
-function createBookingUrl(bookingUrl?: string, link?: string) {
-  const rawUrl = (bookingUrl || link || "").trim();
-  if (!rawUrl) return undefined;
-  if (/^https?:\/\//i.test(rawUrl)) return rawUrl;
+// `gv=true` switches a Google Calendar appointment schedule to its embeddable booking view.
+function createEmbedUrl(bookingUrl?: string) {
+  if (!bookingUrl) return undefined;
 
-  return `https://cal.eu/${rawUrl.replace(/^@/, "").replace(/^\/+/, "")}`;
+  const url = new URL(bookingUrl);
+  url.searchParams.set("gv", "true");
+  return url.toString();
 }
 
 export function LocalizedHome({ locale }: { locale: Locale }) {
@@ -57,20 +66,6 @@ export function LocalizedHome({ locale }: { locale: Locale }) {
   useEffect(() => {
     document.documentElement.lang = localeHtmlLang[locale];
   }, [locale]);
-
-  useEffect(() => {
-    (async function configureCalEmbed() {
-      const cal = await getCalApi({ namespace: calNamespace, embedJsUrl: calEmbedJsUrl });
-      cal("ui", {
-        cssVarsPerTheme: {
-          light: { "cal-brand": accent },
-          dark: { "cal-brand": accent },
-        },
-        hideEventTypeDetails: false,
-        layout: "month_view",
-      });
-    })();
-  }, []);
 
   return (
     <main className="relative w-full overflow-x-hidden bg-[var(--background)] text-[var(--primary)]">
@@ -451,6 +446,10 @@ function SectionLabel({ kicker, title, inverted = false }: { kicker: string; tit
 
 function BookingPanel({ locale }: { locale: Locale }) {
   const t = dictionaries[locale];
+  // The embed is mounted only after an explicit click. Google sets an advertising cookie
+  // (NID) and receives the visitor IP as soon as the iframe loads, so loading it on page
+  // view would place a non-essential cookie without consent.
+  const [embedAllowed, setEmbedAllowed] = useState(false);
 
   return (
     <div className="grid min-w-0 gap-4">
@@ -466,22 +465,37 @@ function BookingPanel({ locale }: { locale: Locale }) {
           <BookingLink className="brutalist-button shrink-0 justify-center border-[var(--accent)] text-[var(--primary)] [box-shadow:4px_4px_0_0_var(--accent)]" style={{ backgroundColor: accent }}>
             {t.cta.openCalendar} <CalendarDays size={18} />
           </BookingLink>
-        ) : (
-          <div className="accent-outline border-2 border-[var(--accent)] p-4 font-mono text-sm uppercase">
-            {t.cta.bookingMissing}
-          </div>
-        )}
+        ) : null}
       </div>
-      <div className="h-[900px] min-h-[760px] overflow-hidden bg-[#111] md:h-[900px] lg:h-[700px] xl:h-[640px]">
-        <Cal
-          calLink={calLink}
-          calOrigin="https://app.cal.eu"
-          config={{ layout: "month_view", theme: "dark", useSlotsViewOnSmallScreen: "true" }}
-          embedJsUrl={calEmbedJsUrl}
-          namespace={calNamespace}
-          style={{ width: "100%", height: "100%", overflow: "scroll" }}
-        />
-      </div>
+      {!bookingEmbedUrl ? (
+        <div className="accent-outline flex min-h-[220px] items-center justify-center border-2 border-dashed border-[var(--accent)] p-6 text-center font-mono text-sm uppercase">
+          {t.cta.bookingMissing}
+        </div>
+      ) : embedAllowed ? (
+        // Google stacks the picker below ~600px of iframe width (~1225px tall) and goes side-by-side above it (~725px tall).
+        <div className="h-[1240px] overflow-hidden border-2 border-[var(--accent)] bg-white min-[700px]:h-[740px]">
+          <iframe
+            className="h-full w-full"
+            src={bookingEmbedUrl}
+            style={{ border: 0 }}
+            title={t.cta.bookingTitle}
+          />
+        </div>
+      ) : (
+        <div className="flex min-h-[220px] flex-col items-center justify-center gap-4 border-2 border-dashed border-[var(--accent)] p-6 text-center sm:p-10">
+          <p className="font-mono text-sm uppercase text-[var(--accent)]">{t.cta.consentTitle}</p>
+          <p className="max-w-xl text-sm font-semibold leading-snug text-white/80">{t.cta.consentBody}</p>
+          <button
+            className="brutalist-button justify-center border-[var(--accent)] text-[var(--primary)] [box-shadow:4px_4px_0_0_var(--accent)]"
+            onClick={() => setEmbedAllowed(true)}
+            style={{ backgroundColor: accent }}
+            type="button"
+          >
+            <CalendarDays size={18} /> {t.cta.consentLoad}
+          </button>
+          <p className="max-w-xl font-mono text-xs uppercase text-white/50">{t.cta.consentNote}</p>
+        </div>
+      )}
     </div>
   );
 }
