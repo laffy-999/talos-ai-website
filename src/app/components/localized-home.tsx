@@ -1,11 +1,11 @@
 "use client";
 
-import { CSSProperties, useEffect, useMemo, useState } from "react";
+import { CSSProperties, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, BotMessageSquare, CalendarDays, Check, Cog, ScanSearch } from "lucide-react";
-import { dictionaries, localeHtmlLang, localeLabels, localePath, locales, type Locale } from "@/i18n/content";
+import { dictionaries, localeLabels, localePath, locales, type Locale } from "@/i18n/content";
 import { LegalFooter } from "./legal-footer";
 
 const accent = "#39FF14";
@@ -62,10 +62,6 @@ export function LocalizedHome({ locale }: { locale: Locale }) {
     hiddenUp: reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 },
     visible: { opacity: 1, x: 0, y: 0 },
   };
-
-  useEffect(() => {
-    document.documentElement.lang = localeHtmlLang[locale];
-  }, [locale]);
 
   return (
     <main className="relative w-full overflow-x-hidden bg-[var(--background)] text-[var(--primary)]">
