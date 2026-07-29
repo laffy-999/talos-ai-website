@@ -37,6 +37,21 @@ A link copied straight from the address bar carries a `/u/<n>/` account segment,
 
 `NEXT_PUBLIC_*` variables are inlined at build time, so this must be set in the deploy environment too, not only in `.env.local`.
 
+The embed is not loaded on page view.
+Google sets its `NID` advertising cookie and receives the visitor IP as soon as the iframe mounts, so the booking section renders a placeholder until the visitor explicitly clicks to load it.
+Keep that gate in place: the privacy policy states that no non-essential cookie is set without an explicit action.
+
+## Analytics
+
+Traffic is measured with Cloudflare Web Analytics, which is cookieless, so no consent banner is required.
+
+```bash
+NEXT_PUBLIC_CF_BEACON_TOKEN=<site token from Cloudflare dashboard > Web Analytics>
+```
+
+The beacon is injected from `src/app/layout.tsx` and is omitted entirely when the token is empty.
+It is injected in app code rather than through the zone's auto-install setting, because Cloudflare does not rewrite Worker-served HTML, so auto-install alone reports nothing.
+
 ## Checks
 
 ```bash
