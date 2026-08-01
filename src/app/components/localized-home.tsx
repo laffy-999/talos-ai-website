@@ -213,7 +213,7 @@ function HeroHeadline({ hero }: { hero: Dictionary["hero"] }) {
 
 function Header({ locale, t }: { locale: Locale; t: Dictionary }) {
   return (
-    <header id="top" className="sticky top-0 z-30 flex min-h-[var(--header-height)] items-center justify-between gap-4 border-b border-rule bg-surface px-[var(--gutter)] py-3 font-mono text-label text-ink">
+    <header id="top" className="sticky top-0 z-30 flex min-h-[var(--header-height)] items-center justify-between gap-4 bg-surface px-[var(--gutter)] py-3 font-mono text-label text-ink">
       <Link href="#top" className="shrink-0">
         <Image src={talosLogo} alt="Talos AI" className="h-5 w-auto" priority sizes="80px" />
       </Link>
