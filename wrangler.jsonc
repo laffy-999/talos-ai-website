@@ -19,12 +19,6 @@
   "images": {
     "binding": "IMAGES"
   },
-  "analytics_engine_datasets": [
-    {
-      "binding": "BOOKING_ANALYTICS",
-      "dataset": "talos_booking_events"
-    }
-  ],
   // Enables the Worker cache so an image transform is not re-encoded on
   // every request.
   "cache": {
