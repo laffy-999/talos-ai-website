@@ -80,7 +80,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       words: ["AI", "Agents", "built", "for"],
       highlight: "your business",
       subtitle: ["Automate", "repetitive", "business", "tasks", "and", "scale."],
-      imageAlt: "Industrial factory machine with gear train and pipework",
+      imageAlt: "Black-and-white portrait of a humanoid robot",
       labels: ["Agentic Design", "System Thinking", "Automation Perfection"],
     },
     problem: {
@@ -160,7 +160,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       words: ["KI", "Agenten", "gebaut", "für"],
       highlight: "dein Unternehmen",
       subtitle: ["Automatisiere", "wiederkehrende", "Unternehmensaufgaben", "und", "skaliere."],
-      imageAlt: "Industrielle Fabrikmaschine mit Zahnradgetriebe und Rohrsystem",
+      imageAlt: "Schwarz-Weiß-Porträt eines humanoiden Roboters",
       labels: ["Agentic Design", "Systemdenken", "Automation Perfektion"],
     },
     problem: {
@@ -240,7 +240,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       words: ["AI", "Agents", "χτισμένοι", "για"],
       highlight: "την επιχείρηση σου",
       subtitle: ["Αυτοματοποίησε", "επαναλαμβανόμενες", "εργασίες", "και", "κλιμάκωσε."],
-      imageAlt: "Βιομηχανική μηχανή εργοστασίου με γρανάζια και σωληνώσεις",
+      imageAlt: "Ασπρόμαυρο πορτρέτο ανθρωποειδούς ρομπότ",
       labels: ["Agentic Design", "System Thinking", "Automation Perfection"],
     },
     problem: {
