@@ -19,6 +19,12 @@
   "images": {
     "binding": "IMAGES"
   },
+  "analytics_engine_datasets": [
+    {
+      "binding": "ANALYTICS_ENGINE",
+      "dataset": "analytics_events"
+    }
+  ],
   // Enables the Worker cache so an image transform is not re-encoded on
   // every request.
   "cache": {
