@@ -2,7 +2,7 @@ import type { CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, BotMessageSquare, CalendarDays, Check, Cog, ScanSearch } from "lucide-react";
-import heroImage from "@/assets/hero-robot.webp";
+import heroImage from "@/assets/hero-robot-cutout.webp";
 import problemImage from "@/assets/problem.webp";
 import processImage from "@/assets/process.webp";
 import solutionImage from "@/assets/solution.webp";
@@ -58,8 +58,8 @@ export function LocalizedHome({ locale }: { locale: Locale }) {
             </div>
           </div>
           <div className="enter-slide grid gap-4 bg-surface">
-            <div className="relative aspect-[4/5] min-h-[360px] overflow-hidden border border-ink bg-surface sm:min-h-[500px]">
-              <Image src={heroImage} alt={t.hero.imageAlt} fill priority sizes="(min-width: 1024px) 42vw, 100vw" className="object-cover object-[60%_center]" />
+            <div className="relative aspect-[4/5] min-h-[360px] sm:min-h-[500px]">
+              <Image src={heroImage} alt={t.hero.imageAlt} fill priority sizes="(min-width: 1024px) 42vw, 100vw" className="object-contain object-bottom" />
             </div>
             <div className="grid grid-cols-3 gap-4 font-mono text-label text-ink-soft">
               {t.hero.labels.map((label) => (
