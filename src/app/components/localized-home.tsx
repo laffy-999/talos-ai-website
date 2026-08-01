@@ -6,6 +6,7 @@ import heroImage from "@/assets/hero-factory-v2.webp";
 import problemImage from "@/assets/problem.webp";
 import processImage from "@/assets/process.webp";
 import solutionImage from "@/assets/solution.webp";
+import talosLogo from "@/assets/talos-ai-logo-primary-black-cropped.png";
 import { dictionaries, type Dictionary } from "@/i18n/content";
 import { localeHtmlLang, localeLabels, localeNames, localePath, locales, type Locale } from "@/i18n/locales";
 import { BookingCta } from "./booking-cta";
@@ -213,8 +214,8 @@ function HeroHeadline({ hero }: { hero: Dictionary["hero"] }) {
 function Header({ locale, t }: { locale: Locale; t: Dictionary }) {
   return (
     <header className="sticky top-0 z-30 flex min-h-[var(--header-height)] items-center justify-between gap-4 border-b border-rule bg-surface px-[var(--gutter)] py-3 font-mono text-label text-ink">
-      <Link href={localePath(locale)} className="font-extrabold">
-        Talos AI
+      <Link href={localePath(locale)} className="shrink-0">
+        <Image src={talosLogo} alt="Talos AI" className="h-5 w-auto" priority sizes="80px" />
       </Link>
       <nav className="hidden gap-6 sm:flex" aria-label={t.a11y.primaryNav}>
         <a href="#problem">{t.nav.problem}</a>
