@@ -2,21 +2,18 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const interactiveSelector = "a, button, input, select, textarea, label, [role='button'], [tabindex]:not([tabindex='-1'])";
-const formFieldSelector = "input, select, textarea";
-
-type CursorVariant = "idle" | "interactive" | "input";
+const interactiveSelector = "a, button, [role='button'], [tabindex]:not([tabindex='-1'])";
 
 export function CursorFollower() {
   const cursorRef = useRef<HTMLDivElement>(null);
-  const animationRef = useRef<number | null>(null);
+  const frameRef = useRef<number | null>(null);
   const currentRef = useRef({ x: 0, y: 0 });
   const targetRef = useRef({ x: 0, y: 0 });
   const hasMovedRef = useRef(false);
-  const variantRef = useRef<CursorVariant>("idle");
+  const interactiveRef = useRef(false);
   const visibleRef = useRef(false);
   const [enabled, setEnabled] = useState(false);
-  const [variant, setVariant] = useState<CursorVariant>("idle");
+  const [interactive, setInteractive] = useState(false);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -35,80 +32,92 @@ export function CursorFollower() {
   }, []);
 
   useEffect(() => {
-    if (!enabled) {
-      if (animationRef.current !== null) {
-        window.cancelAnimationFrame(animationRef.current);
-        animationRef.current = null;
-      }
-      hasMovedRef.current = false;
-      visibleRef.current = false;
-      return;
-    }
+    if (!enabled) return;
 
-    const setNextVisible = (nextVisible: boolean) => {
-      if (visibleRef.current === nextVisible) return;
-      visibleRef.current = nextVisible;
-      setVisible(nextVisible);
-    };
-
-    const setNextVariant = (nextVariant: CursorVariant) => {
-      if (variantRef.current === nextVariant) return;
-      variantRef.current = nextVariant;
-      setVariant(nextVariant);
-    };
-
+    // The loop is started by pointer movement and parks itself once it has caught up, so an idle
+    // tab does no per-frame work.
     const animate = () => {
       const cursor = cursorRef.current;
-      if (cursor) {
-        currentRef.current.x += (targetRef.current.x - currentRef.current.x) * 0.22;
-        currentRef.current.y += (targetRef.current.y - currentRef.current.y) * 0.22;
-        cursor.style.setProperty("--cursor-x", `${currentRef.current.x}px`);
-        cursor.style.setProperty("--cursor-y", `${currentRef.current.y}px`);
+      const target = targetRef.current;
+      const current = currentRef.current;
+      const dx = target.x - current.x;
+      const dy = target.y - current.y;
+
+      if (Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1) {
+        frameRef.current = null;
+        return;
       }
 
-      animationRef.current = window.requestAnimationFrame(animate);
+      current.x += dx * 0.22;
+      current.y += dy * 0.22;
+      cursor?.style.setProperty("--cursor-x", `${current.x}px`);
+      cursor?.style.setProperty("--cursor-y", `${current.y}px`);
+      frameRef.current = window.requestAnimationFrame(animate);
     };
 
     const handlePointerMove = (event: PointerEvent) => {
       if (event.pointerType !== "mouse") {
-        setNextVisible(false);
+        if (visibleRef.current) {
+          visibleRef.current = false;
+          setVisible(false);
+        }
         return;
       }
 
       targetRef.current = { x: event.clientX, y: event.clientY };
 
       if (!hasMovedRef.current) {
-        currentRef.current = targetRef.current;
+        currentRef.current = { ...targetRef.current };
         hasMovedRef.current = true;
+        cursorRef.current?.style.setProperty("--cursor-x", `${event.clientX}px`);
+        cursorRef.current?.style.setProperty("--cursor-y", `${event.clientY}px`);
       }
 
-      const target = event.target instanceof Element ? event.target : null;
-      const isFormField = Boolean(target?.closest(formFieldSelector));
-      const isInteractive = Boolean(target?.closest(interactiveSelector));
+      if (!visibleRef.current) {
+        visibleRef.current = true;
+        setVisible(true);
+      }
 
-      setNextVisible(true);
-      setNextVariant(isFormField ? "input" : isInteractive ? "interactive" : "idle");
+      const element = event.target instanceof Element ? event.target : null;
+      const nextInteractive = Boolean(element?.closest(interactiveSelector));
+      if (interactiveRef.current !== nextInteractive) {
+        interactiveRef.current = nextInteractive;
+        setInteractive(nextInteractive);
+      }
+
+      frameRef.current ??= window.requestAnimationFrame(animate);
     };
 
-    const handlePointerLeave = () => setNextVisible(false);
+    const handlePointerLeave = () => {
+      if (!visibleRef.current) return;
+      visibleRef.current = false;
+      setVisible(false);
+    };
 
     window.addEventListener("pointermove", handlePointerMove, { passive: true });
     document.documentElement.addEventListener("pointerleave", handlePointerLeave);
     window.addEventListener("blur", handlePointerLeave);
-    animationRef.current = window.requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener("pointermove", handlePointerMove);
       document.documentElement.removeEventListener("pointerleave", handlePointerLeave);
       window.removeEventListener("blur", handlePointerLeave);
-      if (animationRef.current !== null) {
-        window.cancelAnimationFrame(animationRef.current);
-        animationRef.current = null;
+      if (frameRef.current !== null) {
+        window.cancelAnimationFrame(frameRef.current);
+        frameRef.current = null;
       }
+      hasMovedRef.current = false;
+      visibleRef.current = false;
     };
   }, [enabled]);
 
   if (!enabled) return null;
 
-  return <div ref={cursorRef} className={`cursor-follower cursor-follower--${variant} ${visible ? "is-visible" : ""}`} aria-hidden="true" />;
+  return (
+    <div
+      ref={cursorRef}
+      className={`cursor-follower ${interactive ? "cursor-follower--interactive" : ""} ${visible ? "is-visible" : ""}`}
+      aria-hidden="true"
+    />
+  );
 }

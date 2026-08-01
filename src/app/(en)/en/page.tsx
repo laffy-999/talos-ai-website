@@ -1,11 +1,7 @@
-import type { Metadata } from "next";
 import { LocalizedHome } from "@/app/components/localized-home";
-import { dictionaries } from "@/i18n/content";
+import { pageMetadata } from "@/app/metadata";
 
-export const metadata: Metadata = {
-  title: dictionaries.en.meta.title,
-  description: dictionaries.en.meta.description,
-};
+export const metadata = pageMetadata({ locale: "en" });
 
 export default function EnglishHome() {
   return <LocalizedHome locale="en" />;

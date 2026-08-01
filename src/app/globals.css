@@ -1,85 +1,167 @@
 @import "tailwindcss";
 
+/*
+ * Design tokens. A restyle should only need to touch this block: every component consumes the
+ * generated utilities (bg-surface, text-ink, border-ink, bg-accent, text-on-accent, bg-invert,
+ * text-on-invert, shadow-brutal) and never a raw colour value.
+ *
+ * Known debt to fix with the next palette: --ink on --surface is 2.84:1, which fails WCAG 2.2 AA
+ * for both normal (4.5:1) and large (3:1) text, and --accent on --surface is 1.25:1, which is why
+ * the kickers need the .accent-outline crutch. Darken --ink and stop using --accent as a text
+ * colour on --surface to clear AA in one edit.
+ */
 :root {
-  /* --background: #f6f1e7; */
-  /* --background: #e7e9e7; */
-  --background: #C7C7C7;
-  --foreground: #007f86;
-  --primary: #007f86;
+  --surface: #c7c7c7;
+  --ink: #007f86;
   --accent: #39ff14;
+  --invert: #000000;
+  --on-accent: var(--ink);
+  --on-invert: var(--surface);
+
+  /* Focus ring, kept independent of --accent so it stays visible on any surface. */
+  --focus-ring: #0a0a0a;
+
+  /* Brutalist chrome: hairline width and the hard drop-shadow offsets. */
+  --rule-width: 2px;
+  --brutal-offset: 8px;
+  --brutal-offset-sm: 4px;
+
+  /* Height of the sticky header. Anchor targets offset by it, so the two must not drift. */
+  --header-height: 2.875rem;
+
+  /* Motion. Every entrance and reveal in the site uses this curve and these distances. */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --reveal-shift: 42px;
+  --reveal-shift-sm: 28px;
+
+  /*
+   * The Google booking calendar is a cross-origin document, so its own styles are untouchable: it
+   * ignores prefers-color-scheme and a color-scheme on the iframe (both verified in a browser).
+   * Inverting it and rotating the hue by 120deg turns its white surface dark and lands its blue
+   * accents on green, which sits with --accent. Text and greys are unaffected by the rotation.
+   * This filters someone else's UI, so recheck it after Google redesigns, and drop the token
+   * rather than double-inverting if they ever ship a dark mode of their own.
+   */
+  --booking-embed-filter: invert(1) hue-rotate(120deg);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-accent: var(--accent);
+  --color-invert: var(--invert);
+  --color-on-accent: var(--on-accent);
+  --color-on-invert: var(--on-invert);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
 
-html {
-  scroll-behavior: auto;
+  --shadow-brutal: var(--brutal-offset) var(--brutal-offset) 0 0 var(--ink);
+  --shadow-brutal-sm: var(--brutal-offset-sm) var(--brutal-offset-sm) 0 0 var(--ink);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--surface);
+  color: var(--ink);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
 ::selection,
 *::selection {
-  background: #39ff14 !important;
-  color: #007f86 !important;
+  background: var(--accent);
+  color: var(--ink);
 }
 
-a,
-button,
-input,
-select,
-textarea {
-  outline-color: var(--accent);
+/* One ring definition for every focusable element, so no control can be missed. */
+*:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
 }
 
-input,
-select,
-textarea {
-  min-height: 3rem;
-  width: 100%;
-  border: 2px solid var(--background);
-  border-radius: 0;
-  background: var(--primary);
-  padding: 0.75rem;
-  color: var(--background);
-  font-family: var(--font-geist-mono), monospace;
-  font-size: 0.875rem;
-  text-transform: uppercase;
+/* Sections inverted onto --invert need the ring recoloured, since --focus-ring is near-black. */
+.surface-invert {
+  --focus-ring: var(--accent);
 }
 
-textarea {
-  min-height: 8rem;
-  resize: vertical;
+/* In-page anchor targets must clear the sticky header. */
+section[id] {
+  scroll-margin-top: calc(var(--header-height) + 1rem);
 }
 
-input::placeholder,
-textarea::placeholder {
-  color: #a3a3a3;
+/*
+ * Scroll reveals. Markup is visible by default and the controller only arms elements that are
+ * fully below the fold, so a blocked or failed bundle can never leave content invisible. Stagger
+ * comes from --reveal-delay on the individual items.
+ */
+[data-reveal][data-reveal-state="hidden"] {
+  opacity: 0;
 }
 
-input:disabled,
-select:disabled,
-textarea:disabled {
-  cursor: not-allowed;
-  opacity: 0.55;
+[data-reveal="left"][data-reveal-state="hidden"] {
+  transform: translateX(calc(-1 * var(--reveal-shift)));
+}
+
+[data-reveal="right"][data-reveal-state="hidden"] {
+  transform: translateX(var(--reveal-shift));
+}
+
+[data-reveal="up"][data-reveal-state="hidden"] {
+  transform: translateY(var(--reveal-shift-sm));
+}
+
+[data-reveal][data-reveal-state="visible"] {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 620ms var(--ease-out-expo),
+    transform 620ms var(--ease-out-expo);
+  transition-delay: calc(var(--reveal-delay, 0) * 90ms);
+}
+
+/* Above-the-fold entrances. CSS only, so they never depend on hydration. */
+@keyframes enter-rise {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+}
+
+@keyframes enter-slide {
+  from {
+    opacity: 0;
+    transform: translateX(calc(4 * var(--reveal-shift)));
+  }
+}
+
+@keyframes enter-pop {
+  from {
+    opacity: 0;
+    transform: translateY(var(--reveal-shift-sm)) scale(0.92);
+  }
+}
+
+.enter-rise {
+  animation: enter-rise 700ms var(--ease-out-expo) 420ms backwards;
+}
+
+.enter-slide {
+  animation: enter-slide 700ms var(--ease-out-expo) 40ms backwards;
+}
+
+/* Word-by-word headline stagger; --i is the word index. */
+.enter-pop {
+  display: inline-block;
+  animation: enter-pop 520ms var(--ease-out-expo) calc(520ms + var(--i, 0) * 60ms) backwards;
 }
 
 .accent-outline {
   color: var(--accent);
   font-weight: 900;
   text-shadow:
-    -1px -1px 0 var(--primary),
-    1px -1px 0 var(--primary),
-    -1px 1px 0 var(--primary),
-    1px 1px 0 var(--primary);
+    calc(-1 * var(--rule-width) / 2) calc(-1 * var(--rule-width) / 2) 0 var(--ink),
+    calc(var(--rule-width) / 2) calc(-1 * var(--rule-width) / 2) 0 var(--ink),
+    calc(-1 * var(--rule-width) / 2) calc(var(--rule-width) / 2) 0 var(--ink),
+    calc(var(--rule-width) / 2) calc(var(--rule-width) / 2) 0 var(--ink);
 }
 
 .brutalist-button {
@@ -87,13 +169,13 @@ textarea:disabled {
   min-height: 3.5rem;
   align-items: center;
   gap: 0.625rem;
-  border: 2px solid var(--primary);
+  border: var(--rule-width) solid var(--ink);
   padding: 0.875rem 1.25rem;
   font-family: var(--font-geist-mono), monospace;
   font-size: 0.875rem;
   font-weight: 900;
   text-transform: uppercase;
-  box-shadow: 4px 4px 0 0 var(--primary);
+  box-shadow: var(--shadow-brutal-sm);
   transition:
     transform 140ms ease,
     box-shadow 140ms ease,
@@ -102,13 +184,13 @@ textarea:disabled {
 }
 
 .brutalist-button:hover {
-  transform: translate(4px, 4px);
-  box-shadow: 0 0 0 0 var(--primary);
+  transform: translate(var(--brutal-offset-sm), var(--brutal-offset-sm));
+  box-shadow: 0 0 0 0 var(--ink);
 }
 
-.brutalist-button:focus-visible {
-  outline: 3px solid var(--accent);
-  outline-offset: 3px;
+/* See --booking-embed-filter: recolours the third-party calendar to match the section around it. */
+.booking-embed {
+  filter: var(--booking-embed-filter);
 }
 
 .cursor-follower {
@@ -125,8 +207,8 @@ textarea:disabled {
   border-radius: 999px;
   background: radial-gradient(
     circle,
-    color-mix(in srgb, var(--primary) var(--cursor-strength), transparent) 0%,
-    color-mix(in srgb, var(--primary) 8%, transparent) 42%,
+    color-mix(in srgb, var(--ink) var(--cursor-strength), transparent) 0%,
+    color-mix(in srgb, var(--ink) 8%, transparent) 42%,
     transparent 72%
   );
   filter: blur(5px);
@@ -138,11 +220,12 @@ textarea:disabled {
     height 160ms ease,
     filter 160ms ease,
     opacity 120ms ease;
-  will-change: transform, width, height, opacity, filter;
 }
 
 .cursor-follower.is-visible {
   opacity: 0.72;
+  /* Promoted only while the loop is actually running. */
+  will-change: transform, width, height, opacity, filter;
 }
 
 .cursor-follower--interactive {
@@ -151,14 +234,10 @@ textarea:disabled {
   background: radial-gradient(
     circle,
     color-mix(in srgb, var(--accent) 18%, transparent) 0%,
-    color-mix(in srgb, var(--primary) 10%, transparent) 46%,
+    color-mix(in srgb, var(--ink) 10%, transparent) 46%,
     transparent 74%
   );
   filter: blur(7px);
-}
-
-.cursor-follower--input {
-  opacity: 0;
 }
 
 @media (pointer: coarse), (prefers-reduced-motion: reduce) {

@@ -3,12 +3,25 @@
   "name": "talos-ai-website",
   "main": ".open-next/worker.js",
   "compatibility_date": "2026-07-10",
-  "compatibility_flags": ["nodejs_compat"],
+  // global_fetch_strictly_public makes Worker-originated fetch() to our own
+  // hostname go out through the edge instead of looping back internally, so
+  // /_next/image can re-fetch the underlying asset.
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "observability": {
     "enabled": true
   },
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
+  },
+  // Without this binding /_next/image streams the original bytes back
+  // unchanged instead of transforming them (images.js checks env.IMAGES).
+  "images": {
+    "binding": "IMAGES"
+  },
+  // Enables the Worker cache so an image transform is not re-encoded on
+  // every request.
+  "cache": {
+    "enabled": true
   }
 }

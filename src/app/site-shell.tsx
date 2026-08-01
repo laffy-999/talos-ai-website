@@ -1,7 +1,9 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
-import { Providers } from "./providers";
+import { CursorFollower } from "./components/cursor-follower";
+import { RevealController } from "./components/reveal-controller";
+import { OrganizationJsonLd } from "./components/organization-json-ld";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,7 +27,10 @@ export function SiteShell({ lang, children }: { lang: string; children: React.Re
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full">
-        <Providers>{children}</Providers>
+        {children}
+        <RevealController />
+        <CursorFollower />
+        <OrganizationJsonLd />
         {beaconToken ? (
           <Script
             data-cf-beacon={JSON.stringify({ token: beaconToken })}
