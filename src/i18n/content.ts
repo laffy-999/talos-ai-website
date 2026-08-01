@@ -6,7 +6,7 @@ export type Dictionary = {
   nav: {
     problem: string;
     solution: string;
-    proof: string;
+    process: string;
     book: string;
     inspect: string;
     bookAudit: string;
@@ -32,7 +32,7 @@ export type Dictionary = {
     blocks: [string, string][];
     imageAlt: string;
   };
-  proof: {
+  process: {
     kicker: string;
     title: string;
     cards: [string, string, string][];
@@ -43,6 +43,9 @@ export type Dictionary = {
     title: string;
     body: string;
     bullets: string[];
+    sessionMeta: string;
+    founderRole: string;
+    contactPrompt: string;
     bookingKicker: string;
     bookingTitle: string;
     bookingBody: string;
@@ -68,7 +71,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
     nav: {
       problem: "Problem",
       solution: "Solution",
-      proof: "Proof",
+      process: "Process",
       book: "Book",
       inspect: "Inspect the system",
       bookAudit: "Book a strategic session",
@@ -102,8 +105,8 @@ export const dictionaries: Record<Locale, Dictionary> = {
       ],
       imageAlt: "Automation system connecting operational workflows",
     },
-    proof: {
-      kicker: "Proof",
+    process: {
+      kicker: "Process",
       title: "A practical delivery path, built around real operational evidence.",
       cards: [
         ["01", "Audit", "Find the operational bottlenecks worth automating first."],
@@ -118,6 +121,10 @@ export const dictionaries: Record<Locale, Dictionary> = {
       title: "Book a strategic session",
       body: "Let's discover together your opportunities for applied autonomous systems.",
       bullets: ["No fake AI roadmap", "Concrete workflow target", "Google Calendar booking"],
+      sessionMeta:
+        "60 minutes. You leave with one mapped workflow and an honest read on whether automating it is worth the effort.",
+      founderRole: "Founder, Talos AI - Thessaloniki",
+      contactPrompt: "Not ready to book? Email me directly:",
       bookingKicker: "Calendar ready",
       bookingTitle: "Choose your time.",
       bookingBody:
@@ -144,7 +151,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
     nav: {
       problem: "Problem",
       solution: "Lösung",
-      proof: "Nachweis",
+      process: "Ablauf",
       book: "Buchen",
       inspect: "System ansehen",
       bookAudit: "Strategische Session buchen",
@@ -178,8 +185,8 @@ export const dictionaries: Record<Locale, Dictionary> = {
       ],
       imageAlt: "Automationssystem, das operative Workflows verbindet",
     },
-    proof: {
-      kicker: "Nachweis",
+    process: {
+      kicker: "Ablauf",
       title: "Ein praktischer Lieferprozess, gebaut auf echten operativen Erkenntnissen.",
       cards: [
         ["01", "Audit", "Wir finden zuerst die operativen Engpässe, die Automation wirklich wert sind."],
@@ -194,6 +201,10 @@ export const dictionaries: Record<Locale, Dictionary> = {
       title: "Strategische Session buchen",
       body: "Lass uns gemeinsam deine Chancen für angewandte autonome Systeme entdecken.",
       bullets: ["Keine Fake-KI-Roadmap", "Konkretes Workflow-Ziel", "Buchung über Google Calendar"],
+      sessionMeta:
+        "60 Minuten. Du gehst mit einem konkret gemappten Workflow raus und mit einer ehrlichen Einschätzung, ob sich die Automation lohnt.",
+      founderRole: "Gründer, Talos AI - Thessaloniki",
+      contactPrompt: "Noch nicht so weit? Schreib mir direkt:",
       bookingKicker: "Kalender bereit",
       bookingTitle: "Wähle deinen Termin.",
       bookingBody:
@@ -220,7 +231,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
     nav: {
       problem: "Πρόβλημα",
       solution: "Λύση",
-      proof: "Απόδειξη",
+      process: "Διαδικασία",
       book: "Κράτηση",
       inspect: "Δες το σύστημα",
       bookAudit: "Κλείσε audit",
@@ -254,8 +265,8 @@ export const dictionaries: Record<Locale, Dictionary> = {
       ],
       imageAlt: "Σύστημα αυτοματισμού που συνδέει λειτουργικές ροές",
     },
-    proof: {
-      kicker: "Απόδειξη",
+    process: {
+      kicker: "Διαδικασία",
       title: "Μια πρακτική διαδικασία παράδοσης, βασισμένη σε πραγματικά λειτουργικά δεδομένα.",
       cards: [
         ["01", "Audit", "Βρίσκουμε πρώτα τα bottlenecks που αξίζει πραγματικά να αυτοματοποιηθούν."],
@@ -270,6 +281,10 @@ export const dictionaries: Record<Locale, Dictionary> = {
       title: "Κλείσε Strategic Session",
       body: "Ας ανακαλύψουμε μαζί τις ευκαιρίες σου για εφαρμοσμένα autonomous systems.",
       bullets: ["Όχι fake AI roadmap", "Συγκεκριμένος workflow στόχος", "Booking με Google Calendar"],
+      sessionMeta:
+        "60 λεπτά. Φεύγεις με έναν χαρτογραφημένο workflow και μια ειλικρινή εκτίμηση για το αν αξίζει να αυτοματοποιηθεί.",
+      founderRole: "Ιδρυτής, Talos AI - Θεσσαλονίκη",
+      contactPrompt: "Δεν είσαι έτοιμος για κράτηση; Γράψε μου απευθείας:",
       bookingKicker: "Calendar ready",
       bookingTitle: "Διάλεξε την ώρα σου.",
       bookingBody:
