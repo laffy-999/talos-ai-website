@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { RevealController } from "./components/reveal-controller";
+import { InternalTrafficFlag } from "./components/internal-traffic-flag";
 import { OrganizationJsonLd } from "./components/organization-json-ld";
 
 const geistSans = Geist({
@@ -28,6 +29,7 @@ export function SiteShell({ lang, children }: { lang: string; children: React.Re
       <body className="min-h-full">
         {children}
         <RevealController />
+        <InternalTrafficFlag />
         <OrganizationJsonLd />
         {beaconToken ? (
           <Script
