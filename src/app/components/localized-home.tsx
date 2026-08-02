@@ -71,8 +71,8 @@ export function LocalizedHome({ locale }: { locale: Locale }) {
 
         <section id="problem" className="border-b border-rule bg-surface px-[var(--gutter)] py-[var(--section-y)]">
           <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-10 lg:grid-cols-[0.82fr_1.18fr]">
-            <div className="relative aspect-square w-full overflow-hidden border border-ink bg-surface" data-reveal="left">
-              <Image src={problemImage} alt={t.problem.imageAlt} fill sizes="(min-width: 1024px) 38vw, 100vw" className="object-cover" />
+            <div className="relative aspect-[4/5] min-h-[360px] sm:min-h-[500px]" data-reveal="left">
+              <Image src={problemImage} alt={t.problem.imageAlt} sizes="(min-width: 1024px) 38vw, 100vw" fill className="object-contain object-bottom" />
             </div>
             <div className="ml-auto w-full max-w-6xl" data-reveal="right">
               <p className="kicker">{t.problem.kicker}</p>
@@ -122,7 +122,7 @@ export function LocalizedHome({ locale }: { locale: Locale }) {
                 })}
               </ul>
             </div>
-            <div className="relative aspect-video w-full overflow-hidden border border-ink bg-surface" data-reveal="right">
+            <div className="relative aspect-[3/2] w-full" data-reveal="right">
               <Image src={solutionImage} alt={t.solution.imageAlt} fill sizes="(min-width: 1024px) 38vw, 100vw" className="object-contain object-center" />
             </div>
           </div>
@@ -133,8 +133,8 @@ export function LocalizedHome({ locale }: { locale: Locale }) {
 
         <section id="process" className="border-b border-rule px-[var(--gutter)] py-[var(--section-y)]">
           <div className="grid grid-cols-[minmax(0,1fr)] items-center gap-10 lg:grid-cols-[0.82fr_1.18fr]">
-            <div className="relative aspect-video w-full overflow-hidden border border-ink bg-surface" data-reveal="left">
-              <Image src={processImage} alt={t.process.imageAlt} fill sizes="(min-width: 1024px) 38vw, 100vw" className="object-cover" />
+            <div className="relative aspect-[4/5] min-h-[360px] w-full sm:min-h-[500px]" data-reveal="left">
+              <Image src={processImage} alt={t.process.imageAlt} fill sizes="(min-width: 1024px) 38vw, 100vw" className="object-contain object-center" />
             </div>
             <div data-reveal="right">
               <div className="ml-auto max-w-5xl">

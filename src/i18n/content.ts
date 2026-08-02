@@ -93,7 +93,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
         "Leads going cold from slow follow-up",
         "Data scattered across five tools that don't talk to each other",
       ],
-      imageAlt: "Industrial machine throttled to a narrow bottleneck",
+      imageAlt: "Black-and-white robot leg leaking bright green fluid",
     },
     solution: {
       kicker: "Solution",
@@ -103,7 +103,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
         ["Fix it with AI", "We build a system around how your business actually runs."],
         ["Runs on its own", "Less busywork, fewer dropped balls, more time to grow."],
       ],
-      imageAlt: "Automation system connecting operational workflows",
+      imageAlt: "Black-and-white robotic hand pointing at a bright spark",
     },
     process: {
       kicker: "Process",
@@ -114,7 +114,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
         ["03", "Prototype", "Ship a usable automation quickly and test against real work."],
         ["04", "Deploy", "Monitor, refine, and document the system for repeatable use."],
       ],
-      imageAlt: "Automation process engine running end to end",
+      imageAlt: "Black-and-white robot sprinting forward",
     },
     cta: {
       kicker: "Next step",
@@ -173,7 +173,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
         "Leads werden kalt, weil Follow-ups zu langsam sind",
         "Daten liegen in fünf Tools, die nicht miteinander sprechen",
       ],
-      imageAlt: "Industriemaschine, die sich zu einem engen Nadelöhr verjüngt",
+      imageAlt: "Schwarz-Weiß-Roboterbein, aus dem grelle grüne Flüssigkeit austritt",
     },
     solution: {
       kicker: "Lösung",
@@ -183,7 +183,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
         ["Mit KI beheben", "Wir bauen ein System um die Art, wie dein Business wirklich arbeitet."],
         ["Läuft selbstständig", "Weniger Busywork, weniger verlorene Chancen, mehr Zeit für Wachstum."],
       ],
-      imageAlt: "Automationssystem, das operative Workflows verbindet",
+      imageAlt: "Schwarz-Weiß-Roboterhand, die auf einen hellen Funken zeigt",
     },
     process: {
       kicker: "Ablauf",
@@ -194,7 +194,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
         ["03", "Prototyp", "Eine nutzbare Automation wird schnell gebaut und gegen echte Arbeit getestet."],
         ["04", "Deployment", "Das System wird überwacht, verbessert und für wiederholbare Nutzung dokumentiert."],
       ],
-      imageAlt: "Automationsprozess, der durchgehend läuft",
+      imageAlt: "Schwarz-Weiß-Roboter im Sprint",
     },
     cta: {
       kicker: "Nächster Schritt",
@@ -253,7 +253,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
         "Τα leads κρυώνουν από αργό follow-up",
         "Τα δεδομένα είναι σκορπισμένα σε πέντε εργαλεία που δεν μιλάνε μεταξύ τους",
       ],
-      imageAlt: "Βιομηχανική μηχανή που στενεύει σε ένα σημείο συμφόρησης",
+      imageAlt: "Ασπρόμαυρο πόδι ρομπότ από το οποίο διαρρέει έντονο πράσινο υγρό",
     },
     solution: {
       kicker: "Λύση",
@@ -263,7 +263,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
         ["Το λύνουμε με AI", "Χτίζουμε σύστημα γύρω από τον τρόπο που λειτουργεί πραγματικά η επιχείρηση σου."],
         ["Τρέχει μόνο του", "Λιγότερη χειροκίνητη δουλειά, λιγότερες χαμένες ευκαιρίες, περισσότερος χρόνος για ανάπτυξη."],
       ],
-      imageAlt: "Σύστημα αυτοματισμού που συνδέει λειτουργικές ροές",
+      imageAlt: "Ασπρόμαυρο χέρι ρομπότ που δείχνει μια φωτεινή σπίθα",
     },
     process: {
       kicker: "Διαδικασία",
@@ -274,7 +274,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
         ["03", "Prototype", "Παραδίδουμε γρήγορα χρήσιμο automation και το δοκιμάζουμε σε πραγματική δουλειά."],
         ["04", "Deploy", "Παρακολουθούμε, βελτιώνουμε και τεκμηριώνουμε το σύστημα για επαναλήψιμη χρήση."],
       ],
-      imageAlt: "Μηχανή διαδικασιών αυτοματισμού σε συνεχή λειτουργία",
+      imageAlt: "Ασπρόμαυρο ρομπότ που τρέχει",
     },
     cta: {
       kicker: "Επόμενο βήμα",
