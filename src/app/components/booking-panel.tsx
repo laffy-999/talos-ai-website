@@ -1,6 +1,7 @@
 import { CalendarDays } from "lucide-react";
 import type { Dictionary } from "@/i18n/content";
 import type { Locale } from "@/i18n/locales";
+import { BookingEmbed } from "./booking-embed";
 import { BookingCta } from "./booking-cta";
 
 const bookingHost = "calendar.google.com";
@@ -75,12 +76,7 @@ export function BookingPanel({ copy, locale }: { copy: Dictionary["cta"]; locale
         ) : null}
       </div>
       {embedUrl ? (
-        // Google stacks the picker below ~600px of iframe width (~1225px tall) and goes side-by-side above it (~725px tall).
-        // The iframe is lazily loaded: the visitor's IP reaches Google, and Google sets its NID cookie, once the
-        // booking section approaches the viewport rather than on every page view. The privacy policy documents this.
-        <div className="h-[1240px] overflow-hidden border border-accent bg-invert min-[700px]:h-[740px]">
-          <iframe className="booking-embed h-full w-full border-0" loading="lazy" src={embedUrl} title={copy.bookingTitle} />
-        </div>
+        <BookingEmbed action={copy.embedAction} notice={copy.embedNotice} src={embedUrl} title={copy.bookingTitle} />
       ) : (
         <div className="kicker flex min-h-[220px] items-center justify-center bg-invert p-6 text-center">
           {copy.bookingMissing}

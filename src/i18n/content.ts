@@ -51,6 +51,8 @@ export type Dictionary = {
     bookingBody: string;
     openCalendar: string;
     bookingMissing: string;
+    embedNotice: string;
+    embedAction: string;
   };
   footer: { links: [string, string, string] };
 };
@@ -131,6 +133,9 @@ export const dictionaries: Record<Locale, Dictionary> = {
         "Pick a strategic session slot in the calendar below. Booking details and qualification questions are handled directly by Google Calendar.",
       openCalendar: "Open booking calendar",
       bookingMissing: "Add NEXT_PUBLIC_BOOKING_URL to enable the Google Calendar booking page.",
+      embedNotice:
+        "The calendar is hosted by Google. Loading it sends your IP address to Google and lets Google set its own cookie, so it stays unloaded until you ask for it.",
+      embedAction: "Load booking calendar",
     },
     footer: {
       links: ["Impressum", "Privacy", "Terms"],
@@ -211,6 +216,9 @@ export const dictionaries: Record<Locale, Dictionary> = {
         "Wähle unten im Kalender einen Slot für die strategische Session. Buchungsdetails und Qualifizierungsfragen werden direkt von Google Calendar verarbeitet.",
       openCalendar: "Booking-Kalender öffnen",
       bookingMissing: "Füge NEXT_PUBLIC_BOOKING_URL hinzu, um die Google Calendar Buchungsseite zu aktivieren.",
+      embedNotice:
+        "Der Kalender wird von Google gehostet. Beim Laden geht deine IP-Adresse an Google und Google kann ein eigenes Cookie setzen. Deshalb bleibt er ungeladen, bis du ihn anforderst.",
+      embedAction: "Booking-Kalender laden",
     },
     footer: {
       links: ["Impressum", "Datenschutz", "Nutzungsbedingungen"],
@@ -291,6 +299,9 @@ export const dictionaries: Record<Locale, Dictionary> = {
         "Διάλεξε παρακάτω στο calendar ένα slot για strategic session. Τα booking details και τα qualification questions τα χειρίζεται απευθείας το Google Calendar.",
       openCalendar: "Άνοιγμα booking calendar",
       bookingMissing: "Πρόσθεσε NEXT_PUBLIC_BOOKING_URL για να ενεργοποιηθεί η σελίδα booking του Google Calendar.",
+      embedNotice:
+        "Το calendar φιλοξενείται από την Google. Η φόρτωσή του στέλνει τη διεύθυνση IP σου στην Google και επιτρέπει στην Google να θέσει δικό της cookie, γι' αυτό παραμένει αφόρτωτο μέχρι να το ζητήσεις.",
+      embedAction: "Φόρτωση booking calendar",
     },
     footer: {
       links: ["Impressum", "Πολιτική απορρήτου", "Όροι χρήσης"],
