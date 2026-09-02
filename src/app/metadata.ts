@@ -13,8 +13,8 @@ export const siteName = "Talos AI";
 // Open Graph card can read CSS custom properties. Keep these three in sync with --surface, --ink
 // and --accent.
 export const brandColors = {
-  surface: "#c7c7c7",
-  ink: "#007f86",
+  surface: "#f2efe6",
+  ink: "#15181b",
   accent: "#39ff14",
 } as const;
 

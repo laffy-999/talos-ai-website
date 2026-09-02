@@ -11,14 +11,12 @@ export function LegalPage({ locale, page }: { locale: Locale; page: LegalPageTyp
   return (
     <>
       <main className="min-h-screen bg-surface text-ink">
-        <header className="px-5 py-10 sm:px-8 lg:px-12">
-          <Link className="font-mono text-sm font-black uppercase" href={localePath(locale)}>
+        <header className="px-[var(--gutter)] py-[var(--section-y)]">
+          <Link className="font-mono text-label font-extrabold" href={localePath(locale)}>
             Talos AI
           </Link>
-          <p className="accent-outline mt-10 font-mono text-sm uppercase">{content.kicker}</p>
-          <h1 className="mt-4 break-words text-[clamp(3rem,10vw,8rem)] font-black uppercase leading-[0.85] [overflow-wrap:anywhere]">
-            {content.title}
-          </h1>
+          <p className="kicker mt-10">{content.kicker}</p>
+          <h1 className="mt-4 break-words text-display font-extrabold [overflow-wrap:anywhere]">{content.title}</h1>
         </header>
         {page === "impressum" ? (
           <ImpressumContent details={legalContent[locale].impressum.details} note={content.note} />
@@ -35,51 +33,52 @@ export function LegalPage({ locale, page }: { locale: Locale; page: LegalPageTyp
 
 function ImpressumContent({ details, note }: { details: string[][]; note: string }) {
   return (
-    <section className="border-t-2 border-ink px-5 py-10 sm:px-8 lg:px-12">
+    <section className="border-t border-rule px-[var(--gutter)] py-[var(--section-y)]">
       {/* Label/value pairs, so the association is programmatic and not visual only. */}
-      <dl className="max-w-5xl border-2 border-ink bg-surface">
-        {details.map(([label, value]) => (
-          <div key={label} className="grid border-b-2 border-ink last:border-b-0 md:grid-cols-[0.34fr_1fr]">
-            <dt className="border-b-2 border-ink p-4 font-mono text-sm uppercase md:border-b-0 md:border-r-2">{label}</dt>
-            <dd className="p-4 text-lg font-semibold">{value}</dd>
+      <dl className="max-w-5xl">
+        {details.map(([label, value], index) => (
+          <div
+            key={label}
+            className={`grid py-5 md:grid-cols-[0.34fr_1fr] ${index > 0 ? "border-t border-rule" : ""}`}
+          >
+            <dt className="font-mono text-label text-ink-soft">{label}</dt>
+            <dd className="mt-2 text-body font-normal md:mt-0">{value}</dd>
           </div>
         ))}
       </dl>
-      <p className="mt-8 max-w-4xl text-sm font-semibold leading-relaxed">{note}</p>
+      <p className="mt-8 max-w-4xl text-body font-normal text-ink-soft">{note}</p>
     </section>
   );
 }
 
 function PrivacyContent({ sections, note }: { sections: string[][]; note: string }) {
   return (
-    <>
-      <div className="grid border-t-2 border-ink md:grid-cols-2">
-        {sections.map(([title, body]) => (
-          <section key={title} className="border-b-2 border-ink p-5 md:border-r-2 md:p-8 md:[&:nth-child(2n)]:border-r-0">
-            <h2 className="break-words text-3xl font-black uppercase leading-none [overflow-wrap:anywhere]">{title}</h2>
-            <p className="mt-5 text-lg font-semibold leading-relaxed">{body}</p>
+    <div className="border-t border-rule px-[var(--gutter)] py-[var(--section-y)]">
+      <div className="max-w-5xl">
+        {sections.map(([title, body], index) => (
+          <section key={title} className={index > 0 ? "border-t border-rule py-8" : "pb-8"}>
+            <h2 className="break-words text-h3 font-extrabold [overflow-wrap:anywhere]">{title}</h2>
+            <p className="mt-5 text-body font-normal">{body}</p>
           </section>
         ))}
       </div>
-      <div className="px-5 py-8 sm:px-8 lg:px-12">
-        <p className="max-w-4xl text-sm font-semibold leading-relaxed">{note}</p>
-      </div>
-    </>
+      <p className="mt-8 max-w-4xl text-body font-normal text-ink-soft">{note}</p>
+    </div>
   );
 }
 
 function TermsContent({ sections, note }: { sections: string[][]; note: string }) {
   return (
-    <div className="border-t-2 border-ink px-5 py-10 sm:px-8 lg:px-12">
-      <div className="max-w-5xl border-2 border-ink">
-        {sections.map(([title, body]) => (
-          <section key={title} className="border-b-2 border-ink p-5 last:border-b-0 sm:p-8">
-            <h2 className="break-words text-3xl font-black uppercase leading-none [overflow-wrap:anywhere]">{title}</h2>
-            <p className="mt-4 text-lg font-semibold leading-relaxed">{body}</p>
+    <div className="border-t border-rule px-[var(--gutter)] py-[var(--section-y)]">
+      <div className="max-w-5xl">
+        {sections.map(([title, body], index) => (
+          <section key={title} className={index > 0 ? "border-t border-rule py-8" : "pb-8"}>
+            <h2 className="break-words text-h3 font-extrabold [overflow-wrap:anywhere]">{title}</h2>
+            <p className="mt-4 text-body font-normal">{body}</p>
           </section>
         ))}
       </div>
-      <p className="mt-8 max-w-4xl text-sm font-semibold leading-relaxed">{note}</p>
+      <p className="mt-8 max-w-4xl text-body font-normal text-ink-soft">{note}</p>
     </div>
   );
 }

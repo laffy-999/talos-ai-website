@@ -14,9 +14,9 @@ export function LegalFooter({ locale, path = "" }: { locale: Locale; path?: stri
   ];
 
   return (
-    <footer className="border-t-2 border-ink bg-surface px-5 py-6 font-mono text-sm uppercase text-ink sm:px-8 lg:px-12">
+    <footer className="border-t border-rule bg-surface px-[var(--gutter)] py-6 font-mono text-label text-ink">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <Link className="font-black" href={localePath(locale)}>
+        <Link className="font-extrabold" href={localePath(locale)}>
           Talos AI
         </Link>
         <nav className="flex flex-wrap gap-x-6 gap-y-2" aria-label={t.a11y.legalNav}>

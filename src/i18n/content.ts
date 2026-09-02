@@ -6,7 +6,7 @@ export type Dictionary = {
   nav: {
     problem: string;
     solution: string;
-    proof: string;
+    process: string;
     book: string;
     inspect: string;
     bookAudit: string;
@@ -32,7 +32,7 @@ export type Dictionary = {
     blocks: [string, string][];
     imageAlt: string;
   };
-  proof: {
+  process: {
     kicker: string;
     title: string;
     cards: [string, string, string][];
@@ -43,11 +43,16 @@ export type Dictionary = {
     title: string;
     body: string;
     bullets: string[];
+    sessionMeta: string;
+    founderRole: string;
+    contactPrompt: string;
     bookingKicker: string;
     bookingTitle: string;
     bookingBody: string;
     openCalendar: string;
     bookingMissing: string;
+    embedNotice: string;
+    embedAction: string;
   };
   footer: { links: [string, string, string] };
 };
@@ -68,7 +73,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
     nav: {
       problem: "Problem",
       solution: "Solution",
-      proof: "Proof",
+      process: "Process",
       book: "Book",
       inspect: "Inspect the system",
       bookAudit: "Book a strategic session",
@@ -77,7 +82,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       words: ["AI", "Agents", "built", "for"],
       highlight: "your business",
       subtitle: ["Automate", "repetitive", "business", "tasks", "and", "scale."],
-      imageAlt: "Industrial factory machine with gear train and pipework",
+      imageAlt: "Black-and-white portrait of a humanoid robot",
       labels: ["Agentic Design", "System Thinking", "Automation Perfection"],
     },
     problem: {
@@ -90,7 +95,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
         "Leads going cold from slow follow-up",
         "Data scattered across five tools that don't talk to each other",
       ],
-      imageAlt: "Industrial machine throttled to a narrow bottleneck",
+      imageAlt: "Black-and-white robot leg leaking bright green fluid",
     },
     solution: {
       kicker: "Solution",
@@ -100,10 +105,10 @@ export const dictionaries: Record<Locale, Dictionary> = {
         ["Fix it with AI", "We build a system around how your business actually runs."],
         ["Runs on its own", "Less busywork, fewer dropped balls, more time to grow."],
       ],
-      imageAlt: "Automation system connecting operational workflows",
+      imageAlt: "Black-and-white robotic hand pointing at a bright spark",
     },
-    proof: {
-      kicker: "Proof",
+    process: {
+      kicker: "Process",
       title: "A practical delivery path, built around real operational evidence.",
       cards: [
         ["01", "Audit", "Find the operational bottlenecks worth automating first."],
@@ -111,19 +116,26 @@ export const dictionaries: Record<Locale, Dictionary> = {
         ["03", "Prototype", "Ship a usable automation quickly and test against real work."],
         ["04", "Deploy", "Monitor, refine, and document the system for repeatable use."],
       ],
-      imageAlt: "Automation process engine running end to end",
+      imageAlt: "Black-and-white robot sprinting forward",
     },
     cta: {
       kicker: "Next step",
       title: "Book a strategic session",
       body: "Let's discover together your opportunities for applied autonomous systems.",
       bullets: ["No fake AI roadmap", "Concrete workflow target", "Google Calendar booking"],
+      sessionMeta:
+        "60 minutes. You leave with one mapped workflow and an honest read on whether automating it is worth the effort.",
+      founderRole: "Founder, Talos AI - Thessaloniki",
+      contactPrompt: "Not ready to book? Email me directly:",
       bookingKicker: "Calendar ready",
       bookingTitle: "Choose your time.",
       bookingBody:
         "Pick a strategic session slot in the calendar below. Booking details and qualification questions are handled directly by Google Calendar.",
       openCalendar: "Open booking calendar",
       bookingMissing: "Add NEXT_PUBLIC_BOOKING_URL to enable the Google Calendar booking page.",
+      embedNotice:
+        "The calendar is hosted by Google. Loading it sends your IP address to Google and lets Google set its own cookie, so it stays unloaded until you ask for it.",
+      embedAction: "Load booking calendar",
     },
     footer: {
       links: ["Impressum", "Privacy", "Terms"],
@@ -144,7 +156,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
     nav: {
       problem: "Problem",
       solution: "Lösung",
-      proof: "Nachweis",
+      process: "Ablauf",
       book: "Buchen",
       inspect: "System ansehen",
       bookAudit: "Strategische Session buchen",
@@ -153,7 +165,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       words: ["KI", "Agenten", "gebaut", "für"],
       highlight: "dein Unternehmen",
       subtitle: ["Automatisiere", "wiederkehrende", "Unternehmensaufgaben", "und", "skaliere."],
-      imageAlt: "Industrielle Fabrikmaschine mit Zahnradgetriebe und Rohrsystem",
+      imageAlt: "Schwarz-Weiß-Porträt eines humanoiden Roboters",
       labels: ["Agentic Design", "Systemdenken", "Automation Perfektion"],
     },
     problem: {
@@ -166,7 +178,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
         "Leads werden kalt, weil Follow-ups zu langsam sind",
         "Daten liegen in fünf Tools, die nicht miteinander sprechen",
       ],
-      imageAlt: "Industriemaschine, die sich zu einem engen Nadelöhr verjüngt",
+      imageAlt: "Schwarz-Weiß-Roboterbein, aus dem grelle grüne Flüssigkeit austritt",
     },
     solution: {
       kicker: "Lösung",
@@ -176,10 +188,10 @@ export const dictionaries: Record<Locale, Dictionary> = {
         ["Mit KI beheben", "Wir bauen ein System um die Art, wie dein Business wirklich arbeitet."],
         ["Läuft selbstständig", "Weniger Busywork, weniger verlorene Chancen, mehr Zeit für Wachstum."],
       ],
-      imageAlt: "Automationssystem, das operative Workflows verbindet",
+      imageAlt: "Schwarz-Weiß-Roboterhand, die auf einen hellen Funken zeigt",
     },
-    proof: {
-      kicker: "Nachweis",
+    process: {
+      kicker: "Ablauf",
       title: "Ein praktischer Lieferprozess, gebaut auf echten operativen Erkenntnissen.",
       cards: [
         ["01", "Audit", "Wir finden zuerst die operativen Engpässe, die Automation wirklich wert sind."],
@@ -187,19 +199,26 @@ export const dictionaries: Record<Locale, Dictionary> = {
         ["03", "Prototyp", "Eine nutzbare Automation wird schnell gebaut und gegen echte Arbeit getestet."],
         ["04", "Deployment", "Das System wird überwacht, verbessert und für wiederholbare Nutzung dokumentiert."],
       ],
-      imageAlt: "Automationsprozess, der durchgehend läuft",
+      imageAlt: "Schwarz-Weiß-Roboter im Sprint",
     },
     cta: {
       kicker: "Nächster Schritt",
       title: "Strategische Session buchen",
       body: "Lass uns gemeinsam deine Chancen für angewandte autonome Systeme entdecken.",
       bullets: ["Keine Fake-KI-Roadmap", "Konkretes Workflow-Ziel", "Buchung über Google Calendar"],
+      sessionMeta:
+        "60 Minuten. Du gehst mit einem konkret gemappten Workflow raus und mit einer ehrlichen Einschätzung, ob sich die Automation lohnt.",
+      founderRole: "Gründer, Talos AI - Thessaloniki",
+      contactPrompt: "Noch nicht so weit? Schreib mir direkt:",
       bookingKicker: "Kalender bereit",
       bookingTitle: "Wähle deinen Termin.",
       bookingBody:
         "Wähle unten im Kalender einen Slot für die strategische Session. Buchungsdetails und Qualifizierungsfragen werden direkt von Google Calendar verarbeitet.",
       openCalendar: "Booking-Kalender öffnen",
       bookingMissing: "Füge NEXT_PUBLIC_BOOKING_URL hinzu, um die Google Calendar Buchungsseite zu aktivieren.",
+      embedNotice:
+        "Der Kalender wird von Google gehostet. Beim Laden geht deine IP-Adresse an Google und Google kann ein eigenes Cookie setzen. Deshalb bleibt er ungeladen, bis du ihn anforderst.",
+      embedAction: "Booking-Kalender laden",
     },
     footer: {
       links: ["Impressum", "Datenschutz", "Nutzungsbedingungen"],
@@ -220,7 +239,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
     nav: {
       problem: "Πρόβλημα",
       solution: "Λύση",
-      proof: "Απόδειξη",
+      process: "Διαδικασία",
       book: "Κράτηση",
       inspect: "Δες το σύστημα",
       bookAudit: "Κλείσε audit",
@@ -229,7 +248,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       words: ["AI", "Agents", "χτισμένοι", "για"],
       highlight: "την επιχείρηση σου",
       subtitle: ["Αυτοματοποίησε", "επαναλαμβανόμενες", "εργασίες", "και", "κλιμάκωσε."],
-      imageAlt: "Βιομηχανική μηχανή εργοστασίου με γρανάζια και σωληνώσεις",
+      imageAlt: "Ασπρόμαυρο πορτρέτο ανθρωποειδούς ρομπότ",
       labels: ["Agentic Design", "System Thinking", "Automation Perfection"],
     },
     problem: {
@@ -242,7 +261,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
         "Τα leads κρυώνουν από αργό follow-up",
         "Τα δεδομένα είναι σκορπισμένα σε πέντε εργαλεία που δεν μιλάνε μεταξύ τους",
       ],
-      imageAlt: "Βιομηχανική μηχανή που στενεύει σε ένα σημείο συμφόρησης",
+      imageAlt: "Ασπρόμαυρο πόδι ρομπότ από το οποίο διαρρέει έντονο πράσινο υγρό",
     },
     solution: {
       kicker: "Λύση",
@@ -252,10 +271,10 @@ export const dictionaries: Record<Locale, Dictionary> = {
         ["Το λύνουμε με AI", "Χτίζουμε σύστημα γύρω από τον τρόπο που λειτουργεί πραγματικά η επιχείρηση σου."],
         ["Τρέχει μόνο του", "Λιγότερη χειροκίνητη δουλειά, λιγότερες χαμένες ευκαιρίες, περισσότερος χρόνος για ανάπτυξη."],
       ],
-      imageAlt: "Σύστημα αυτοματισμού που συνδέει λειτουργικές ροές",
+      imageAlt: "Ασπρόμαυρο χέρι ρομπότ που δείχνει μια φωτεινή σπίθα",
     },
-    proof: {
-      kicker: "Απόδειξη",
+    process: {
+      kicker: "Διαδικασία",
       title: "Μια πρακτική διαδικασία παράδοσης, βασισμένη σε πραγματικά λειτουργικά δεδομένα.",
       cards: [
         ["01", "Audit", "Βρίσκουμε πρώτα τα bottlenecks που αξίζει πραγματικά να αυτοματοποιηθούν."],
@@ -263,19 +282,26 @@ export const dictionaries: Record<Locale, Dictionary> = {
         ["03", "Prototype", "Παραδίδουμε γρήγορα χρήσιμο automation και το δοκιμάζουμε σε πραγματική δουλειά."],
         ["04", "Deploy", "Παρακολουθούμε, βελτιώνουμε και τεκμηριώνουμε το σύστημα για επαναλήψιμη χρήση."],
       ],
-      imageAlt: "Μηχανή διαδικασιών αυτοματισμού σε συνεχή λειτουργία",
+      imageAlt: "Ασπρόμαυρο ρομπότ που τρέχει",
     },
     cta: {
       kicker: "Επόμενο βήμα",
       title: "Κλείσε Strategic Session",
       body: "Ας ανακαλύψουμε μαζί τις ευκαιρίες σου για εφαρμοσμένα autonomous systems.",
       bullets: ["Όχι fake AI roadmap", "Συγκεκριμένος workflow στόχος", "Booking με Google Calendar"],
+      sessionMeta:
+        "60 λεπτά. Φεύγεις με έναν χαρτογραφημένο workflow και μια ειλικρινή εκτίμηση για το αν αξίζει να αυτοματοποιηθεί.",
+      founderRole: "Ιδρυτής, Talos AI - Θεσσαλονίκη",
+      contactPrompt: "Δεν είσαι έτοιμος για κράτηση; Γράψε μου απευθείας:",
       bookingKicker: "Calendar ready",
       bookingTitle: "Διάλεξε την ώρα σου.",
       bookingBody:
         "Διάλεξε παρακάτω στο calendar ένα slot για strategic session. Τα booking details και τα qualification questions τα χειρίζεται απευθείας το Google Calendar.",
       openCalendar: "Άνοιγμα booking calendar",
       bookingMissing: "Πρόσθεσε NEXT_PUBLIC_BOOKING_URL για να ενεργοποιηθεί η σελίδα booking του Google Calendar.",
+      embedNotice:
+        "Το calendar φιλοξενείται από την Google. Η φόρτωσή του στέλνει τη διεύθυνση IP σου στην Google και επιτρέπει στην Google να θέσει δικό της cookie, γι' αυτό παραμένει αφόρτωτο μέχρι να το ζητήσεις.",
+      embedAction: "Φόρτωση booking calendar",
     },
     footer: {
       links: ["Impressum", "Πολιτική απορρήτου", "Όροι χρήσης"],

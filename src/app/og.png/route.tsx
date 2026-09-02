@@ -22,7 +22,7 @@ export function GET() {
           justifyContent: "space-between",
           background: brandColors.surface,
           color: brandColors.ink,
-          border: `12px solid ${brandColors.ink}`,
+          border: `8px solid ${brandColors.ink}`,
           padding: "64px 72px",
           fontSize: 32,
           letterSpacing: "0.08em",
@@ -34,10 +34,10 @@ export function GET() {
           <span>Thessaloniki</span>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-          <span style={{ fontSize: 84, letterSpacing: "-0.02em", lineHeight: 1 }}>AI Agents built for</span>
+          <span style={{ fontSize: 76, letterSpacing: "-0.02em", lineHeight: 1 }}>AI Agents built for</span>
           <span
             style={{
-              fontSize: 84,
+              fontSize: 76,
               letterSpacing: "-0.02em",
               lineHeight: 1,
               padding: "8px 20px",
